@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
 
@@ -25,10 +25,12 @@ class ImagesListViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
 
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -48,9 +50,9 @@ extension ImagesListViewController {
         let likeImage = isLiked ? UIImage(named: "LikeActive") : UIImage(named: "LikeNoActive")
         cell.likeButton.setImage(likeImage, for: .normal)
 
-        let gradientLayer = CAGradientLayer.createGradientLayer(frame: view.bounds)
-        gradientLayer.frame.size.height = 30
-        cell.gradientView.layer.addSublayer(gradientLayer)
+        let gradientLayer = GradientView(frame: view.bounds)
+        cell.gradientView.layer.addSublayer(gradientLayer.gradientLayer)
+
     }
 }
 

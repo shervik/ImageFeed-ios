@@ -5,7 +5,6 @@
 //  Created by Виктория Щербакова on 20.12.2022.
 //
 
-import Foundation
 import UIKit
 
 private enum Constants {
@@ -24,7 +23,7 @@ final class ImagesListCell: UITableViewCell {
 
     lazy var imageCell = { UIImageView() }()
     lazy var likeButton = { UIButton() }()
-    lazy var gradientView = { UIView() }()
+    lazy var gradientView = { GradientView() }()
     private lazy var labelDate = { UILabel() }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -38,50 +37,53 @@ final class ImagesListCell: UITableViewCell {
     }
 
     private func setup() {
-        contentView.contentMode = .center
-        contentView.addSubview(imageCell)
-        contentView.addSubview(labelDate)
-        contentView.addSubview(likeButton)
-        contentView.addSubview(gradientView)
+        [imageCell, labelDate, likeButton, gradientView].forEach { subview in
+            contentView.addSubview(subview)
+        }
 
+        contentView.contentMode = .center
+        configureLayoutConstraint()
         configureImageView()
         configureLabel()
-        configureLikeButton()
-        configureGradientLayer()
     }
-    private func configureImageView() {
+
+
+    private func configureLayoutConstraint() {
         imageCell.translatesAutoresizingMaskIntoConstraints = false
-        imageCell.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.anchorCellVertical).isActive = true
-        imageCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.anchorCellHorizontal).isActive = true
-        imageCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.anchorCellHorizontal).isActive = true
-        imageCell.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.anchorCellVertical).isActive = true
+        likeButton.translatesAutoresizingMaskIntoConstraints = false
+        labelDate.translatesAutoresizingMaskIntoConstraints = false
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            imageCell.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.anchorCellVertical),
+            imageCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.anchorCellHorizontal),
+            imageCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.anchorCellHorizontal),
+            imageCell.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.anchorCellVertical),
+
+            likeButton.trailingAnchor.constraint(equalTo: imageCell.trailingAnchor),
+            likeButton.topAnchor.constraint(equalTo: imageCell.topAnchor),
+            likeButton.heightAnchor.constraint(equalToConstant: Constants.anchorLikeHeight),
+
+            labelDate.leadingAnchor.constraint(equalTo: imageCell.leadingAnchor, constant: Constants.anchorLabelLeading),
+            labelDate.bottomAnchor.constraint(equalTo: imageCell.bottomAnchor, constant: -Constants.anchorLabelBottom),
+
+            gradientView.trailingAnchor.constraint(equalTo: imageCell.trailingAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: imageCell.leadingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: imageCell.bottomAnchor),
+            gradientView.heightAnchor.constraint(equalToConstant: Constants.anchorGradientHeight)
+        ])
+    }
+
+    private func configureImageView() {
         imageCell.contentMode = .scaleAspectFill
         imageCell.clipsToBounds = true
         imageCell.layer.cornerRadius = Constants.cornerRadiys
     }
 
-    private func configureLikeButton() {
-        likeButton.translatesAutoresizingMaskIntoConstraints = false
-        likeButton.trailingAnchor.constraint(equalTo: imageCell.trailingAnchor).isActive = true
-        likeButton.topAnchor.constraint(equalTo: imageCell.topAnchor).isActive = true
-        likeButton.heightAnchor.constraint(equalToConstant: Constants.anchorLikeHeight).isActive = true
-    }
-
     private func configureLabel() {
-        labelDate.translatesAutoresizingMaskIntoConstraints = false
-        labelDate.leadingAnchor.constraint(equalTo: imageCell.leadingAnchor, constant: Constants.anchorLabelLeading).isActive = true
-        labelDate.bottomAnchor.constraint(equalTo: imageCell.bottomAnchor, constant: -Constants.anchorLabelBottom).isActive = true
         labelDate.text = Date().dateString
         labelDate.font.withSize(Constants.fontLabel)
         labelDate.textColor = .ypWhite
         labelDate.contentMode = .left
-    }
-
-    func configureGradientLayer() {
-        gradientView.translatesAutoresizingMaskIntoConstraints = false
-        gradientView.trailingAnchor.constraint(equalTo: imageCell.trailingAnchor).isActive = true
-        gradientView.leadingAnchor.constraint(equalTo: imageCell.leadingAnchor).isActive = true
-        gradientView.bottomAnchor.constraint(equalTo: imageCell.bottomAnchor).isActive = true
-        gradientView.heightAnchor.constraint(equalToConstant: Constants.anchorGradientHeight).isActive = true
     }
 }
