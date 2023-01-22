@@ -47,12 +47,11 @@ extension ImagesListViewController {
         cell.backgroundColor = .clear
 
         let isLiked = indexPath.row % 2 == 0
-        let likeImage = isLiked ? UIImage(named: "LikeActive") : UIImage(named: "LikeNoActive")
+        let likeImage = isLiked ? UIImage(named: "like_active") : UIImage(named: "like_disabled")
         cell.likeButton.setImage(likeImage, for: .normal)
 
         let gradientLayer = GradientView(frame: view.bounds)
         cell.gradientView.layer.addSublayer(gradientLayer.gradientLayer)
-
     }
 }
 
@@ -76,8 +75,6 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //Подсказка: Высота ImageView будет ровно во столько же раз больше высоты image, во сколько раз ширина ImageView больше ширины image.
-
         guard let image = UIImage(named: photosName[indexPath.row]) else { return 0 }
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
@@ -87,4 +84,11 @@ extension ImagesListViewController: UITableViewDelegate {
         return cellHeight
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let singleImageView = SingleImageViewController()
+        singleImageView.image = UIImage(named: photosName[indexPath.row]) ?? UIImage()
+        singleImageView.modalPresentationStyle = .fullScreen
+        singleImageView.modalTransitionStyle = .coverVertical
+        present(singleImageView, animated: true, completion: nil)
+    }
 }
