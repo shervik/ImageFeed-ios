@@ -30,6 +30,7 @@
 		55EAA19D2976C20400196867 /* ImageCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19C2976C20400196867 /* ImageCellModel.swift */; };
 		55EAA19F2976C2F300196867 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19E2976C2F300196867 /* ProfileModel.swift */; };
 		55EAA1A12976C3D300196867 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1A02976C3D300196867 /* AlertPresenter.swift */; };
+		55EAA1A9297EAE0000196867 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		55EAA19C2976C20400196867 /* ImageCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCellModel.swift; sourceTree = "<group>"; };
 		55EAA19E2976C2F300196867 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		55EAA1A02976C3D300196867 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,13 +117,13 @@
 		55EAA14D295226CE00196867 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				55EAA1702971A33900196867 /* NavigationController */,
-				55EAA16D29715A2400196867 /* TabBarViewController */,
-				55EAA1592965990600196867 /* ProfileView */,
 				55EAA15029522FE800196867 /* ImagesListView */,
+				55EAA1AB297EB3E700196867 /* ProfileView */,
 				55EAA157296586CF00196867 /* GradientView.swift */,
-				55EAA1732971C3F400196867 /* SingleImageViewController.swift */,
 				55EAA1A02976C3D300196867 /* AlertPresenter.swift */,
+				55EAA1732971C3F400196867 /* SingleImageViewController.swift */,
+				55EAA1712971A36D00196867 /* NavigationController.swift */,
+				55EAA16E29715A6E00196867 /* TabBarViewController.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -146,14 +148,6 @@
 			path = ImagesListView;
 			sourceTree = "<group>";
 		};
-		55EAA1592965990600196867 /* ProfileView */ = {
-			isa = PBXGroup;
-			children = (
-				55EAA15A2965992B00196867 /* ProfileViewController.swift */,
-			);
-			path = ProfileView;
-			sourceTree = "<group>";
-		};
 		55EAA15C2970ADAC00196867 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -163,22 +157,6 @@
 				55EAA1612970B48E00196867 /* SF-Pro-Display-Semibold.otf */,
 			);
 			path = Fonts;
-			sourceTree = "<group>";
-		};
-		55EAA16D29715A2400196867 /* TabBarViewController */ = {
-			isa = PBXGroup;
-			children = (
-				55EAA16E29715A6E00196867 /* TabBarViewController.swift */,
-			);
-			path = TabBarViewController;
-			sourceTree = "<group>";
-		};
-		55EAA1702971A33900196867 /* NavigationController */ = {
-			isa = PBXGroup;
-			children = (
-				55EAA1712971A36D00196867 /* NavigationController.swift */,
-			);
-			path = NavigationController;
 			sourceTree = "<group>";
 		};
 		55EAA1972976C17900196867 /* Models */ = {
@@ -196,6 +174,15 @@
 			children = (
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		55EAA1AB297EB3E700196867 /* ProfileView */ = {
+			isa = PBXGroup;
+			children = (
+				55EAA15A2965992B00196867 /* ProfileViewController.swift */,
+				55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */,
+			);
+			path = ProfileView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,6 +273,7 @@
 				55EAA16C2971562B00196867 /* UIFont+Extensions.swift in Sources */,
 				55EAA1A12976C3D300196867 /* AlertPresenter.swift in Sources */,
 				55EAA16F29715A6E00196867 /* TabBarViewController.swift in Sources */,
+				55EAA1A9297EAE0000196867 /* ProfilePresenter.swift in Sources */,
 				55EAA1742971C3F400196867 /* SingleImageViewController.swift in Sources */,
 				55EAA154295DD4F000196867 /* Date+Extensions.swift in Sources */,
 				55EAA19F2976C2F300196867 /* ProfileModel.swift in Sources */,

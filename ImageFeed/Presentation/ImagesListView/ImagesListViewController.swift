@@ -16,7 +16,11 @@ final class ImagesListViewController: UIViewController {
         view.backgroundColor = .ypBlack
         configTable()
     }
+}
 
+// MARK: - ImagesListView Configuration
+
+extension ImagesListViewController {
     private func configTable() {
         let tableView = UITableView(frame: .null, style: .plain)
         view.addSubview(tableView)
@@ -36,9 +40,7 @@ final class ImagesListViewController: UIViewController {
         tableView.delegate = self
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.identifier)
     }
-}
 
-extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let photo = UIImage(named: photosName[indexPath.row]) else { return }
 
@@ -54,6 +56,8 @@ extension ImagesListViewController {
         cell.gradientView.layer.addSublayer(gradientLayer.gradientLayer)
     }
 }
+
+// MARK: - ImagesListView DataSource
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -71,6 +75,8 @@ extension ImagesListViewController: UITableViewDataSource {
         return imageListCell
     }
 }
+
+// MARK: - ImagesListView Delegate 
 
 extension ImagesListViewController: UITableViewDelegate {
 

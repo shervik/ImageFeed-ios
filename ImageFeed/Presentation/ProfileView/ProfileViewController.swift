@@ -18,6 +18,7 @@ final class ProfileViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
 
     private var alertPresenter: AlertPresenterProtocol?
+    private var profilePresenter: ProfileProtocol?
 
     private lazy var avatarImage = { UIImageView() }()
     private lazy var personalNameLabel = { UILabel() }()
@@ -41,23 +42,39 @@ final class ProfileViewController: UIViewController {
         }
         return stackView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypBlack
         alertPresenter = AlertPresenter(delegate: self)
+        profilePresenter = ProfilePresenter()
+        guard let model = profilePresenter?.profileModel else { return }
 
         configStackView()
-        configAvatar()
+        configExitButton()
 
-        exitButton.setImage(UIImage(named: "exit"), for: .normal)
-        exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
-
-        configLabel(personalNameLabel, text: "Екатерина Новикова", font: UIFont.sfDisplayBold)
-        configLabel(nicknameLabel, text: "@ekaterina_nov")
-        configLabel(descriptionLabel, text: "Hello, world!")
+        configAvatar(model.avatar)
+        configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfDisplayBold)
+        configLabel(nicknameLabel, text: model.nickname)
+        configLabel(descriptionLabel, text: model.description)
     }
 
+    @objc private func didTapExitButton() {
+        let alertExit = AlertModel(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            primaryButtonText: "Да",
+            primaryCompletion: { print("press yes") },
+            secondButtonText: "Нет",
+            secondCompletion:  { print("press no") })
+
+        alertPresenter?.showAlert(alert: alertExit)
+    }
+}
+
+// MARK: - ProfileView Configurations
+
+extension ProfileViewController {
     private func configStackView() {
         [stackViewHorizontal, personalNameLabel, nicknameLabel, descriptionLabel].forEach { item in
             stackViewVertical.addArrangedSubview(item)
@@ -79,10 +96,15 @@ final class ProfileViewController: UIViewController {
         ])
     }
 
-    private func configAvatar() {
-        avatarImage.image = UIImage(named: "avatar")
+    private func configAvatar(_ avatar: UIImage) {
+        avatarImage.image = avatar
         avatarImage.contentMode = .scaleAspectFit
         avatarImage.tintColor = .gray
+    }
+
+    private func configExitButton() {
+        exitButton.setImage(UIImage(named: "exit"), for: .normal)
+        exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
     }
 
     private func configLabel(_ label: UILabel, text: String, font: UIFont? = UIFont.sfDisplayRegular) {
@@ -93,17 +115,5 @@ final class ProfileViewController: UIViewController {
         personalNameLabel.numberOfLines = 2
         personalNameLabel.addCharactersSpacing(-0.08)
         descriptionLabel.numberOfLines = 5
-    }
-
-    @objc private func didTapExitButton() {
-        let alertExit = AlertModel(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            primaryButtonText: "Да",
-            primaryCompletion: { print("press yes") },
-            secondButtonText: "Нет",
-            secondCompletion:  { print("press no") })
-
-        alertPresenter?.showAlert(alert: alertExit)
     }
 }

@@ -24,7 +24,7 @@ final class AlertPresenter: AlertPresenterProtocol {
             title: alert.title,
             message: alert.message,
             preferredStyle: .alert)
-
+        
         let oneAction = UIAlertAction(
             title: alert.primaryButtonText,
             style: .default) { _ in

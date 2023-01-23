@@ -21,10 +21,10 @@ private enum Constants {
 final class ImagesListCell: UITableViewCell {
     static let identifier = "ImagesListCell"
 
+    private lazy var labelDate = { UILabel() }()
     lazy var imageCell = { UIImageView() }()
     lazy var likeButton = { UIButton() }()
     lazy var gradientView = { GradientView() }()
-    private lazy var labelDate = { UILabel() }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -46,8 +46,11 @@ final class ImagesListCell: UITableViewCell {
         configureImageView()
         configureLabel()
     }
+}
 
+// MARK: - ImagesListCell Configuration
 
+extension ImagesListCell {
     private func configureLayoutConstraint() {
         imageCell.translatesAutoresizingMaskIntoConstraints = false
         likeButton.translatesAutoresizingMaskIntoConstraints = false
