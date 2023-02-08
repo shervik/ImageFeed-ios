@@ -16,6 +16,21 @@
 		55EAA1522952304C00196867 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1512952304C00196867 /* ImagesListCell.swift */; };
 		55EAA154295DD4F000196867 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA153295DD4F000196867 /* Date+Extensions.swift */; };
 		55EAA158296586CF00196867 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA157296586CF00196867 /* GradientView.swift */; };
+		55EAA15B2965992B00196867 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA15A2965992B00196867 /* ProfileViewController.swift */; };
+		55EAA1602970B3D200196867 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 55EAA15F2970B3D200196867 /* SF-Pro-Display-Bold.otf */; };
+		55EAA1652970B48F00196867 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 55EAA1612970B48E00196867 /* SF-Pro-Display-Semibold.otf */; };
+		55EAA1662970B48F00196867 /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 55EAA1622970B48E00196867 /* SF-Pro-Display-Medium.otf */; };
+		55EAA1682970B48F00196867 /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 55EAA1642970B48F00196867 /* SF-Pro-Display-Regular.otf */; };
+		55EAA16C2971562B00196867 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA16B2971562B00196867 /* UIFont+Extensions.swift */; };
+		55EAA16F29715A6E00196867 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA16E29715A6E00196867 /* TabBarViewController.swift */; };
+		55EAA1722971A36D00196867 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1712971A36D00196867 /* NavigationController.swift */; };
+		55EAA1742971C3F400196867 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1732971C3F400196867 /* SingleImageViewController.swift */; };
+		55EAA19629759F5700196867 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19529759F5700196867 /* UILabel+Extensions.swift */; };
+		55EAA19A2976C1A100196867 /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1992976C1A100196867 /* AlertModel.swift */; };
+		55EAA19D2976C20400196867 /* ImageCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19C2976C20400196867 /* ImageCellModel.swift */; };
+		55EAA19F2976C2F300196867 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19E2976C2F300196867 /* ProfileModel.swift */; };
+		55EAA1A12976C3D300196867 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1A02976C3D300196867 /* AlertPresenter.swift */; };
+		55EAA1A9297EAE0000196867 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +45,21 @@
 		55EAA1512952304C00196867 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		55EAA153295DD4F000196867 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Date+Extensions.swift"; path = "Helpers/Date+Extensions.swift"; sourceTree = "<group>"; };
 		55EAA157296586CF00196867 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		55EAA15A2965992B00196867 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		55EAA15F2970B3D200196867 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
+		55EAA1612970B48E00196867 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
+		55EAA1622970B48E00196867 /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
+		55EAA1642970B48F00196867 /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
+		55EAA16B2971562B00196867 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIFont+Extensions.swift"; path = "Helpers/UIFont+Extensions.swift"; sourceTree = "<group>"; };
+		55EAA16E29715A6E00196867 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		55EAA1712971A36D00196867 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		55EAA1732971C3F400196867 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
+		55EAA19529759F5700196867 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UILabel+Extensions.swift"; path = "Helpers/UILabel+Extensions.swift"; sourceTree = "<group>"; };
+		55EAA1992976C1A100196867 /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
+		55EAA19C2976C20400196867 /* ImageCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCellModel.swift; sourceTree = "<group>"; };
+		55EAA19E2976C2F300196867 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
+		55EAA1A02976C3D300196867 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +92,8 @@
 		55EAA13529521F7C00196867 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				55EAA1982976C18200196867 /* Services */,
+				55EAA1972976C17900196867 /* Models */,
 				55EAA14D295226CE00196867 /* Presentation */,
 				55EAA14A2952262C00196867 /* Helpers */,
 				55EAA14E295226F000196867 /* Resources */,
@@ -76,6 +108,8 @@
 			children = (
 				55EAA14B2952265200196867 /* UIColor+Extensions.swift */,
 				55EAA153295DD4F000196867 /* Date+Extensions.swift */,
+				55EAA16B2971562B00196867 /* UIFont+Extensions.swift */,
+				55EAA19529759F5700196867 /* UILabel+Extensions.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -83,9 +117,13 @@
 		55EAA14D295226CE00196867 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				55EAA15029522FE800196867 /* TableViewController */,
-				55EAA13A29521F7C00196867 /* ImagesListViewController.swift */,
+				55EAA15029522FE800196867 /* ImagesListView */,
+				55EAA1AB297EB3E700196867 /* ProfileView */,
 				55EAA157296586CF00196867 /* GradientView.swift */,
+				55EAA1A02976C3D300196867 /* AlertPresenter.swift */,
+				55EAA1732971C3F400196867 /* SingleImageViewController.swift */,
+				55EAA1712971A36D00196867 /* NavigationController.swift */,
+				55EAA16E29715A6E00196867 /* TabBarViewController.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -93,6 +131,7 @@
 		55EAA14E295226F000196867 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				55EAA15C2970ADAC00196867 /* Fonts */,
 				55EAA13F29521F7D00196867 /* Assets.xcassets */,
 				55EAA14129521F7D00196867 /* LaunchScreen.storyboard */,
 				55EAA14429521F7D00196867 /* Info.plist */,
@@ -100,12 +139,50 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		55EAA15029522FE800196867 /* TableViewController */ = {
+		55EAA15029522FE800196867 /* ImagesListView */ = {
 			isa = PBXGroup;
 			children = (
+				55EAA13A29521F7C00196867 /* ImagesListViewController.swift */,
 				55EAA1512952304C00196867 /* ImagesListCell.swift */,
 			);
-			path = TableViewController;
+			path = ImagesListView;
+			sourceTree = "<group>";
+		};
+		55EAA15C2970ADAC00196867 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				55EAA15F2970B3D200196867 /* SF-Pro-Display-Bold.otf */,
+				55EAA1622970B48E00196867 /* SF-Pro-Display-Medium.otf */,
+				55EAA1642970B48F00196867 /* SF-Pro-Display-Regular.otf */,
+				55EAA1612970B48E00196867 /* SF-Pro-Display-Semibold.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		55EAA1972976C17900196867 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				55EAA1992976C1A100196867 /* AlertModel.swift */,
+				55EAA19C2976C20400196867 /* ImageCellModel.swift */,
+				55EAA19E2976C2F300196867 /* ProfileModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		55EAA1982976C18200196867 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		55EAA1AB297EB3E700196867 /* ProfileView */ = {
+			isa = PBXGroup;
+			children = (
+				55EAA15A2965992B00196867 /* ProfileViewController.swift */,
+				55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */,
+			);
+			path = ProfileView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,8 +243,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55EAA1652970B48F00196867 /* SF-Pro-Display-Semibold.otf in Resources */,
 				55EAA14329521F7D00196867 /* LaunchScreen.storyboard in Resources */,
+				55EAA1602970B3D200196867 /* SF-Pro-Display-Bold.otf in Resources */,
 				55EAA14029521F7D00196867 /* Assets.xcassets in Resources */,
+				55EAA1682970B48F00196867 /* SF-Pro-Display-Regular.otf in Resources */,
+				55EAA1662970B48F00196867 /* SF-Pro-Display-Medium.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,13 +259,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55EAA1722971A36D00196867 /* NavigationController.swift in Sources */,
 				55EAA1522952304C00196867 /* ImagesListCell.swift in Sources */,
 				55EAA13B29521F7C00196867 /* ImagesListViewController.swift in Sources */,
+				55EAA19629759F5700196867 /* UILabel+Extensions.swift in Sources */,
+				55EAA19A2976C1A100196867 /* AlertModel.swift in Sources */,
 				55EAA13729521F7C00196867 /* AppDelegate.swift in Sources */,
+				55EAA19D2976C20400196867 /* ImageCellModel.swift in Sources */,
 				55EAA13929521F7C00196867 /* SceneDelegate.swift in Sources */,
 				55EAA14C2952265200196867 /* UIColor+Extensions.swift in Sources */,
 				55EAA158296586CF00196867 /* GradientView.swift in Sources */,
+				55EAA15B2965992B00196867 /* ProfileViewController.swift in Sources */,
+				55EAA16C2971562B00196867 /* UIFont+Extensions.swift in Sources */,
+				55EAA1A12976C3D300196867 /* AlertPresenter.swift in Sources */,
+				55EAA16F29715A6E00196867 /* TabBarViewController.swift in Sources */,
+				55EAA1A9297EAE0000196867 /* ProfilePresenter.swift in Sources */,
+				55EAA1742971C3F400196867 /* SingleImageViewController.swift in Sources */,
 				55EAA154295DD4F000196867 /* Date+Extensions.swift in Sources */,
+				55EAA19F2976C2F300196867 /* ProfileModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
