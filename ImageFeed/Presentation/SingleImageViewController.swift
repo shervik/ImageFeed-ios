@@ -15,10 +15,10 @@ private enum Constants {
 final class SingleImageViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
 
-    private lazy var imageView = { UIImageView() }()
-    private lazy var buttonBack = { UIButton(type: .custom) }()
-    private lazy var buttonSharing = { UIButton(type: .custom) }()
-    private lazy var scrollView = { UIScrollView() }()
+    private lazy var imageView = UIImageView()
+    private lazy var buttonBack = UIButton(type: .custom)
+    private lazy var buttonSharing = UIButton(type: .custom)
+    private lazy var scrollView = UIScrollView()
     lazy var image = { UIImage() }() {
         didSet {
             imageView.image = image

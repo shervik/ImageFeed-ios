@@ -9,7 +9,7 @@ import UIKit
 
 extension UILabel {
     func addCharactersSpacing(_ spacing: CGFloat) {
-        let attributes: NSDictionary = [NSAttributedString.Key.kern:CGFloat(spacing)]
+        let attributes: NSDictionary = [NSAttributedString.Key.kern: spacing]
         let attributedTitle = NSAttributedString(string: self.text ?? "", attributes: attributes as? [NSAttributedString.Key : Any])
         self.attributedText = attributedTitle
     }

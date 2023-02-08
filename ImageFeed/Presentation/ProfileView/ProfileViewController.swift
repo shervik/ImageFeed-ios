@@ -20,11 +20,11 @@ final class ProfileViewController: UIViewController {
     private var alertPresenter: AlertPresenterProtocol?
     private var profilePresenter: ProfileProtocol?
 
-    private lazy var avatarImage = { UIImageView() }()
-    private lazy var personalNameLabel = { UILabel() }()
-    private lazy var nicknameLabel = { UILabel() }()
-    private lazy var descriptionLabel = { UILabel() }()
-    private lazy var exitButton = { UIButton() }()
+    private lazy var avatarImage = UIImageView()
+    private lazy var personalNameLabel = UILabel()
+    private lazy var nicknameLabel = UILabel()
+    private lazy var descriptionLabel = UILabel()
+    private lazy var exitButton = UIButton()
 
     private lazy var stackViewVertical = {
         let stackView = UIStackView()
@@ -54,7 +54,7 @@ final class ProfileViewController: UIViewController {
         configExitButton()
 
         configAvatar(model.avatar)
-        configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfDisplayBold)
+        configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfBold)
         configLabel(nicknameLabel, text: model.nickname)
         configLabel(descriptionLabel, text: model.description)
     }
@@ -107,7 +107,7 @@ extension ProfileViewController {
         exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
     }
 
-    private func configLabel(_ label: UILabel, text: String, font: UIFont? = UIFont.sfDisplayRegular) {
+    private func configLabel(_ label: UILabel, text: String, font: UIFont? = UIFont.sfRegular) {
         label.text = text
         label.font = font
         label.textColor = .ypWhite
