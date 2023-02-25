@@ -17,8 +17,9 @@ private enum Constants {
 final class ProfileViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
 
-    private var alertPresenter: AlertPresenterProtocol?
-    private var profilePresenter: ProfileProtocol?
+//    private var alertPresenter: AlertPresenterProtocol?
+    private var profilePresenter: ProfilePresenter?
+    private var selfProfile: ProfileModel?
 
     private lazy var avatarImage = UIImageView()
     private lazy var personalNameLabel = UILabel()
@@ -42,33 +43,22 @@ final class ProfileViewController: UIViewController {
         }
         return stackView
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypBlack
-        alertPresenter = AlertPresenter(delegate: self)
-        profilePresenter = ProfilePresenter()
-        guard let model = profilePresenter?.profileModel else { return }
+        profilePresenter = ProfilePresenter(profileService: ProfileService(), delegate: self, alert: AlertPresenter(delegate: self))
+        profilePresenter?.getSelfProfile()
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         configStackView()
         configExitButton()
-
-        configAvatar(model.avatar)
-        configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfBold)
-        configLabel(nicknameLabel, text: model.nickname)
-        configLabel(descriptionLabel, text: model.description)
     }
 
     @objc private func didTapExitButton() {
-        let alertExit = AlertModel(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            primaryButtonText: "Да",
-            primaryCompletion: { print("press yes") },
-            secondButtonText: "Нет",
-            secondCompletion:  { print("press no") })
-
-        alertPresenter?.showAlert(alert: alertExit)
+        profilePresenter?.presentAlert()
     }
 }
 
@@ -115,5 +105,21 @@ extension ProfileViewController {
         personalNameLabel.numberOfLines = 2
         personalNameLabel.addCharactersSpacing(-0.08)
         descriptionLabel.numberOfLines = 5
+    }
+}
+
+// MARK: - ProfilePresenterDelegate
+
+extension ProfileViewController: ProfilePresenterDelegate {
+    
+    func presentProfile(_ profile: ProfileModel?) {
+        self.selfProfile = profile
+
+        guard let selfProfile = self.selfProfile else { return }
+
+        configAvatar(UIImage(named: "avatar") ?? UIImage())
+        configLabel(personalNameLabel, text: "\(selfProfile.fullName)", font: UIFont.sfBold)
+        configLabel(nicknameLabel, text: "@\(selfProfile.username)")
+        configLabel(descriptionLabel, text: selfProfile.bio ?? "Hello, world!")
     }
 }

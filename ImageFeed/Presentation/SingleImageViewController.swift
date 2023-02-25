@@ -92,7 +92,7 @@ extension SingleImageViewController {
         view.addSubview(buttonBack)
         view.addSubview(buttonSharing)
         
-        buttonBack.setImage(UIImage(named: "back"), for: .normal)
+        buttonBack.setImage(UIImage(named: "nav_back_button"), for: .normal)
         buttonBack.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         buttonSharing.setImage(UIImage(named: "sharing"), for: .normal)
         buttonSharing.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
