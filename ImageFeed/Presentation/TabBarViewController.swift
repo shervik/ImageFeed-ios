@@ -19,14 +19,12 @@ final class TabBarViewController: UITabBarController {
         super.viewWillAppear(animated)
         let imagesListItem = ImagesListViewController()
         let profileItem = ProfileViewController()
-        let singleImageItem = SingleImageViewController()
 
         let iconMain = UITabBarItem(title: nil, image: UIImage(named: "tab_editorial_disabled"), selectedImage: UIImage(named: "tab_editorial_active"))
         let iconProfile = UITabBarItem(title: nil, image: UIImage(named: "tab_profile_disabled"), selectedImage: UIImage(named: "tab_profile_active"))
 
         imagesListItem.tabBarItem = iconMain
         profileItem.tabBarItem = iconProfile
-        singleImageItem.tabBarItem = iconProfile
 
         self.viewControllers = [NavigationContoller(rootViewController: imagesListItem), profileItem]
     }
