@@ -17,9 +17,13 @@ final class ProfileService: ProfileManager {
     private func profileRequest() -> URLRequest {
         var request = networkService.makeHTTPRequest(
             path: "/me",
-            httpMethod: "GET"
+            httpMethod: "GET",
+            query: nil
         )
-        request.addValue("Bearer \(OAuth2TokenStorage().token)", forHTTPHeaderField: "Authorization")
+        
+        if let token = OAuth2TokenStorage().token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         return request
     }
 

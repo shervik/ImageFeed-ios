@@ -21,10 +21,16 @@ final class NetworkService: NetworkRouting {
     private let urlSession = URLSession.shared
 
     func makeHTTPRequest(
+        baseURL: URL = defaultBaseURL,
         path: String,
         httpMethod: String,
-        baseURL: URL = defaultBaseURL) -> URLRequest {
-            var request = URLRequest(url: URL(string: path, relativeTo: baseURL)!)
+        query: [URLQueryItem]?) -> URLRequest {
+            var component = URLComponents()
+            component.path = path
+            component.queryItems = query
+            guard let url = component.url(relativeTo: baseURL) else { fatalError() }
+
+            var request = URLRequest(url: url)
             request.httpMethod = httpMethod
             return request
         }

@@ -15,7 +15,7 @@ final class OAuth2Service: AuthRouting {
     private var storage = OAuth2TokenStorage()
     private var networkService = NetworkService()
 
-    private(set) var authToken: String {
+    private(set) var authToken: String? {
         get {
             storage.token
         }
@@ -29,7 +29,10 @@ final class OAuth2Service: AuthRouting {
             switch result {
             case .success(let body):
                 self.authToken = body.accessToken
-                completion(.success(self.authToken))
+
+                if let authToken = self.authToken {
+                    completion(.success(authToken))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -50,14 +53,15 @@ final class OAuth2Service: AuthRouting {
 
     private func authTokenRequest(code: String) -> URLRequest {
         networkService.makeHTTPRequest(
-            path: "/oauth/token"
-            + "?client_id=\(accessKey)"
-            + "&&client_secret=\(secretKey)"
-            + "&&redirect_uri=\(redirectURI)"
-            + "&&code=\(code)"
-            + "&&grant_type=authorization_code",
+            baseURL: URL(string: "https://unsplash.com")!,
+            path: "/oauth/token",
             httpMethod: "POST",
-            baseURL: URL(string: "https://unsplash.com")!
-        ) }
+            query: [URLQueryItem(name: "client_id", value: accessKey),
+                    URLQueryItem(name: "client_secret", value: secretKey),
+                    URLQueryItem(name: "redirect_uri", value: redirectURI),
+                    URLQueryItem(name: "code", value: code),
+                    URLQueryItem(name: "grant_type", value: "authorization_code")]
+        )
+    }
 }
 
