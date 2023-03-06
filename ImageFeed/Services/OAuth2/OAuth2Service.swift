@@ -12,8 +12,12 @@ protocol AuthRouting {
 }
 
 final class OAuth2Service: AuthRouting {
+    static let shared = OAuth2Service()
+    
     private var storage = OAuth2TokenStorage()
     private var networkService = NetworkService()
+    private var code: String?
+    private var task: URLSessionTask?
 
     private(set) var authToken: String? {
         get {
@@ -24,7 +28,15 @@ final class OAuth2Service: AuthRouting {
         }
     }
 
+    private init() { }
+
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        if self.code == code { return }
+        task?.cancel()
+
+        self.code = code
+
         fetchToken(code: code) { result in
             switch result {
             case .success(let body):
@@ -33,8 +45,10 @@ final class OAuth2Service: AuthRouting {
                 if let authToken = self.authToken {
                     completion(.success(authToken))
                 }
+
             case .failure(let error):
                 completion(.failure(error))
+                self.code = nil
             }
         }
     }

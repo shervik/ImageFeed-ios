@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 private enum Constants {
     static let anchorLeading: CGFloat = 16
@@ -14,12 +15,19 @@ private enum Constants {
     static let spacing: CGFloat = 8
 }
 
+protocol ProfileViewControllerProtocol: AnyObject {
+    func showProfile(_ model: ProfileViewModel?)
+    func showAvatar(urlImage: URL?)
+    func didExitFromAccount()
+}
+
 final class ProfileViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
-
-//    private var alertPresenter: AlertPresenterProtocol?
-    private var profilePresenter: ProfilePresenter?
-    private var selfProfile: ProfileModel?
+    
+    private var profileService = ProfileService.shared
+    private var profileImageService = ProfileImageService.shared
+    private var profilePresenter: ProfilePresenterProtocol?
+    private var profileImageServiceObserver: NSObjectProtocol?
 
     private lazy var avatarImage = UIImageView()
     private lazy var personalNameLabel = UILabel()
@@ -47,8 +55,19 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypBlack
-        profilePresenter = ProfilePresenter(profileService: ProfileService(), delegate: self, alert: AlertPresenter(delegate: self))
-        profilePresenter?.getSelfProfile()
+        profilePresenter = ProfilePresenter(viewController: self, alert: AlertPresenter(delegate: self))
+        profilePresenter?.presentProfile(profileService.profile)
+
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -59,6 +78,10 @@ final class ProfileViewController: UIViewController {
 
     @objc private func didTapExitButton() {
         profilePresenter?.presentAlert()
+    }
+
+    private func updateAvatar() {
+        profilePresenter?.presentAvatar()
     }
 }
 
@@ -86,12 +109,6 @@ extension ProfileViewController {
         ])
     }
 
-    private func configAvatar(_ avatar: UIImage) {
-        avatarImage.image = avatar
-        avatarImage.contentMode = .scaleAspectFit
-        avatarImage.tintColor = .gray
-    }
-
     private func configExitButton() {
         exitButton.setImage(UIImage(named: "exit"), for: .normal)
         exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
@@ -108,18 +125,29 @@ extension ProfileViewController {
     }
 }
 
-// MARK: - ProfilePresenterDelegate
+// MARK: - Action
 
-extension ProfileViewController: ProfilePresenterDelegate {
+extension ProfileViewController: ProfileViewControllerProtocol {
+    func didExitFromAccount() {
+        navigationController?.popToRootViewController(animated: true)
+    }
     
-    func presentProfile(_ profile: ProfileModel?) {
-        self.selfProfile = profile
+    func showAvatar(urlImage: URL?) {
+        let cache = ImageCache.default
+        cache.memoryStorage.config.expiration = .seconds(1800)
 
-        guard let selfProfile = self.selfProfile else { return }
-
-        configAvatar(UIImage(named: "avatar") ?? UIImage())
-        configLabel(personalNameLabel, text: "\(selfProfile.fullName)", font: UIFont.sfBold)
-        configLabel(nicknameLabel, text: "@\(selfProfile.username)")
-        configLabel(descriptionLabel, text: selfProfile.bio ?? "Hello, world!")
+        avatarImage.contentMode = .scaleAspectFill
+        avatarImage.kf.indicatorType = .activity
+        let processor = DownsamplingImageProcessor(size: CGSize(width: 70, height: 70)) |> RoundCornerImageProcessor(cornerRadius: 61)
+        avatarImage.kf.setImage(with: urlImage,
+                                placeholder: UIImage(named: "avatar_placeholder"),
+                                options: [.processor(processor)])
+    }
+    
+    func showProfile(_ model: ProfileViewModel?) {
+        guard let model = model else { return }
+        configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfBold)
+        configLabel(nicknameLabel, text: model.loginName)
+        configLabel(descriptionLabel, text: model.bio)
     }
 }
