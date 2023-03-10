@@ -140,7 +140,6 @@
 				55EAA1AE299A377900196867 /* AuthView */,
 				55EAA15029522FE800196867 /* ImagesListView */,
 				55EAA1AB297EB3E700196867 /* ProfileView */,
-				55EAA157296586CF00196867 /* GradientView.swift */,
 				55EAA1A02976C3D300196867 /* AlertPresenter.swift */,
 				55EAA1732971C3F400196867 /* SingleImageViewController.swift */,
 				55EAA1712971A36D00196867 /* NavigationController.swift */,
@@ -162,6 +161,7 @@
 		55EAA15029522FE800196867 /* ImagesListView */ = {
 			isa = PBXGroup;
 			children = (
+				55EAA157296586CF00196867 /* GradientView.swift */,
 				55EAA13A29521F7C00196867 /* ImagesListViewController.swift */,
 				55EAA1512952304C00196867 /* ImagesListCell.swift */,
 			);

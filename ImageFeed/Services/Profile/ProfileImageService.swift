@@ -32,19 +32,6 @@ final class ProfileImageService: ProfileImageServiceProtocol {
 
     private init() { }
 
-    private func profileImageRequest(username: String) -> URLRequest {
-        var request = networkService.makeHTTPRequest(
-            path: "/users/\(username)",
-            httpMethod: "GET",
-            query: nil
-        )
-        if let token = OAuth2TokenStorage().token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-
-        return request
-    }
-
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         if self.username == username { return }
@@ -59,6 +46,7 @@ final class ProfileImageService: ProfileImageServiceProtocol {
                 let image = data.profileImage.large
                 self.currentAvatar = image
                 completion(.success(image))
+                self.username = nil
 
                 NotificationCenter.default
                     .post(
@@ -71,5 +59,18 @@ final class ProfileImageService: ProfileImageServiceProtocol {
                 self.username = nil
             }
         }
+    }
+
+    private func profileImageRequest(username: String) -> URLRequest {
+        var request = networkService.makeHTTPRequest(
+            path: "/users/\(username)",
+            httpMethod: "GET",
+            query: nil
+        )
+        if let token = OAuth2TokenStorage().token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        return request
     }
 }

@@ -8,8 +8,8 @@
 import Foundation
 
 protocol ProfileServiceProtocol: AnyObject {
-    func fetchProfileData(_ token: String, completion: @escaping (Result<ProfileViewModel, Error>) -> Void)
-    var profile: ProfileViewModel? { get }
+    func fetchProfileData(_ token: String, completion: @escaping (Result<ProfileModel, Error>) -> Void)
+    var profile: ProfileModel? { get }
 }
 
 final class ProfileService: ProfileServiceProtocol {
@@ -18,9 +18,9 @@ final class ProfileService: ProfileServiceProtocol {
     private var networkService = NetworkService()
     private var token: String?
     private var task: URLSessionTask?
-    private var currentProfile: ProfileViewModel?
+    private var currentProfile: ProfileModel?
 
-    private(set) var profile: ProfileViewModel? {
+    private(set) var profile: ProfileModel? {
         get {
             return currentProfile
         }
@@ -41,7 +41,7 @@ final class ProfileService: ProfileServiceProtocol {
         return request
     }
 
-    func fetchProfileData(_ token: String, completion: @escaping (Result<ProfileViewModel, Error>) -> Void) {
+    func fetchProfileData(_ token: String, completion: @escaping (Result<ProfileModel, Error>) -> Void) {
         assert(Thread.isMainThread)
         if self.token == token { return }
         task?.cancel()
@@ -52,9 +52,11 @@ final class ProfileService: ProfileServiceProtocol {
             switch result {
             case .success(let success):
                 guard let data = self.networkService.decodeJson(type: ProfileModel.self, data: success) else { return }
-                let profile = ProfileViewModel(model: data)
-                self.currentProfile = profile
+                self.currentProfile = data
+                guard let profile = self.currentProfile else { return }
                 completion(.success(profile))
+                self.token = nil
+
             case .failure(let error):
                 completion(.failure(error))
                 self.token = nil

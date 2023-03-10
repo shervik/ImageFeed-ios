@@ -36,11 +36,4 @@ struct ProfileViewModel {
     var fullName: String
     var loginName: String
     var bio: String
-
-    init(model: ProfileModel) {
-        self.username = model.username
-        self.fullName = "\(model.firstName) \(model.lastName)"
-        self.loginName = "@\(model.username)"
-        self.bio = model.bio ?? "Hello world!"
-    }
 }

@@ -8,19 +8,22 @@
 import Foundation
 
 protocol ProfilePresenterProtocol: AnyObject {
-    func presentProfile(_ profile: ProfileViewModel?)
+    func presentProfile()
     func presentAlert()
-    func presentAvatar()
+    func updateAvatar()
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
-    private var alertPresenter: AlertPresenterProtocol?
+    private var profileService = ProfileService.shared
     private var profileImageService = ProfileImageService.shared
+    private var tokenStorage: OAuth2TokenStorage
+    private var alertPresenter: AlertPresenterProtocol?
     private weak var viewController: ProfileViewControllerProtocol?
 
     init(viewController: ProfileViewControllerProtocol, alert: AlertPresenterProtocol) {
         self.alertPresenter = alert
         self.viewController = viewController
+        self.tokenStorage = OAuth2TokenStorage()
     }
 
     // MARK: - ProfileDelegate
@@ -31,7 +34,8 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             message: "Уверены, что хотите выйти?",
             primaryButtonText: "Да",
             primaryCompletion: {
-                OAuth2TokenStorage().removeObject(forKey: "token")
+                self.tokenStorage.token = nil
+                WebViewViewController.clean()
                 self.viewController?.didExitFromAccount()
             },
             secondButtonText: "Нет",
@@ -40,19 +44,23 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         alertPresenter?.showAlert(alert: alertExit)
     }
 
-    func presentProfile(_ profile: ProfileViewModel?) {
-        guard let profile = profile else { return }
-        viewController?.showProfile(profile)
+    func presentProfile() {
+        guard let profileModel = profileService.profile else { return }
+        let viewModel = convertToViewModel(model: profileModel)
+        viewController?.showProfile(viewModel)
     }
 
-    func presentAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarURL,
-            let url = URL(string: profileImageURL)
-        else {
-            viewController?.showAvatar(urlImage: nil)
-            return
+    func updateAvatar() {
+        if let profileImageURL = profileImageService.avatarURL,
+           let url = URL(string: profileImageURL) {
+            viewController?.showAvatar(urlImage: url)
         }
-        viewController?.showAvatar(urlImage: url)
+    }
+
+    private func convertToViewModel(model: ProfileModel) -> ProfileViewModel {
+        return ProfileViewModel(username: model.username,
+                                fullName: "\(model.firstName) \(model.lastName)",
+                                loginName: "@\(model.username)",
+                                bio: model.bio ?? "Hello world!")
     }
 }

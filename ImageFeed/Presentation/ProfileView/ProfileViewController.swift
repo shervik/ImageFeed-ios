@@ -17,15 +17,13 @@ private enum Constants {
 
 protocol ProfileViewControllerProtocol: AnyObject {
     func showProfile(_ model: ProfileViewModel?)
-    func showAvatar(urlImage: URL?)
+    func showAvatar(urlImage: URL)
     func didExitFromAccount()
 }
 
 final class ProfileViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
     
-    private var profileService = ProfileService.shared
-    private var profileImageService = ProfileImageService.shared
     private var profilePresenter: ProfilePresenterProtocol?
     private var profileImageServiceObserver: NSObjectProtocol?
 
@@ -56,7 +54,7 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .ypBlack
         profilePresenter = ProfilePresenter(viewController: self, alert: AlertPresenter(delegate: self))
-        profilePresenter?.presentProfile(profileService.profile)
+        profilePresenter?.presentProfile()
 
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
@@ -65,23 +63,20 @@ final class ProfileViewController: UIViewController {
                 queue: .main
             ) { [weak self] _ in
                 guard let self = self else { return }
-                self.updateAvatar()
+                self.profilePresenter?.updateAvatar()
             }
-        updateAvatar()
+        profilePresenter?.updateAvatar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         configStackView()
         configExitButton()
+        configAvatar()
     }
 
     @objc private func didTapExitButton() {
         profilePresenter?.presentAlert()
-    }
-
-    private func updateAvatar() {
-        profilePresenter?.presentAvatar()
     }
 }
 
@@ -123,6 +118,15 @@ extension ProfileViewController {
         personalNameLabel.addCharactersSpacing(-0.08)
         descriptionLabel.numberOfLines = 5
     }
+
+    private func configAvatar() {
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            avatarImage.heightAnchor.constraint(equalToConstant: 70),
+            avatarImage.widthAnchor.constraint(equalToConstant: 70)
+        ])
+        avatarImage.contentMode = .scaleAspectFill
+    }
 }
 
 // MARK: - Action
@@ -132,13 +136,12 @@ extension ProfileViewController: ProfileViewControllerProtocol {
         navigationController?.popToRootViewController(animated: true)
     }
     
-    func showAvatar(urlImage: URL?) {
+    func showAvatar(urlImage: URL) {
         let cache = ImageCache.default
         cache.memoryStorage.config.expiration = .seconds(1800)
 
-        avatarImage.contentMode = .scaleAspectFill
         avatarImage.kf.indicatorType = .activity
-        let processor = DownsamplingImageProcessor(size: CGSize(width: 70, height: 70)) |> RoundCornerImageProcessor(cornerRadius: 61)
+        let processor = RoundCornerImageProcessor(cornerRadius: 60)
         avatarImage.kf.setImage(with: urlImage,
                                 placeholder: UIImage(named: "avatar_placeholder"),
                                 options: [.processor(processor)])

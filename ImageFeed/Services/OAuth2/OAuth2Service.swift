@@ -41,11 +41,8 @@ final class OAuth2Service: AuthRouting {
             switch result {
             case .success(let body):
                 self.authToken = body.accessToken
-
-                if let authToken = self.authToken {
-                    completion(.success(authToken))
-                }
-
+                completion(.success(body.accessToken))
+                self.code = nil
             case .failure(let error):
                 completion(.failure(error))
                 self.code = nil

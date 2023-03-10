@@ -31,11 +31,10 @@ final class WebViewViewController: UIViewController {
         super.viewWillAppear(animated)
 
         estimatedProgressObservation = webView.observe(
-                \.estimatedProgress,
-                 options: [.new]) { [weak self] _, _ in
-                     guard let self = self else { return }
-                     self.updateProgress()
-                 }
+            \.estimatedProgress,
+             options: [.new]) { [weak self] _, _ in
+                 self?.updateProgress()
+             }
     }
 
     override func viewDidLoad() {
@@ -49,6 +48,16 @@ final class WebViewViewController: UIViewController {
         configButton()
         configProgress()
         configConstraint()
+    }
+
+    static func clean() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        let dataStore = WKWebsiteDataStore.default()
+        dataStore.fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                dataStore.removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
     }
 
     private func loadWebRequest() {
