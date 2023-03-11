@@ -309,6 +309,7 @@
 				55EAA1DE29B3D80600196867 /* Profile */,
 				55EAA1C729A387DA00196867 /* OAuth2 */,
 				55EAA1C529A3864000196867 /* NetworkService.swift */,
+				55EAA1EB29BD029400196867 /* ImagesListService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
