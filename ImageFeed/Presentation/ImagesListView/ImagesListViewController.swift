@@ -9,7 +9,9 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    private let photos: [String] = Array(0..<20).map{ "\($0)" }
+
+    private let imagesService = ImagesListService.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +44,7 @@ extension ImagesListViewController {
     }
 
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let photo = UIImage(named: photosName[indexPath.row]) else { return }
+        guard let photo = UIImage(named: photos[indexPath.row]) else { return }
 
         cell.selectionStyle = .none
         cell.imageCell.image = photo
@@ -61,7 +63,7 @@ extension ImagesListViewController {
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return photos.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -81,7 +83,7 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = UIImage(named: photosName[indexPath.row]) else { return 0 }
+        guard let image = UIImage(named: photos[indexPath.row]) else { return 0 }
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
         let imageWidth = image.size.width
@@ -90,9 +92,15 @@ extension ImagesListViewController: UITableViewDelegate {
         return cellHeight
     }
 
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == photos.count {
+            imagesService.fetchPhotosNextPage()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let singleImageView = SingleImageViewController()
-        singleImageView.image = UIImage(named: photosName[indexPath.row]) ?? UIImage()
+        singleImageView.image = UIImage(named: photos[indexPath.row]) ?? UIImage()
         singleImageView.modalPresentationStyle = .fullScreen
         singleImageView.modalTransitionStyle = .coverVertical
         present(singleImageView, animated: true, completion: nil)

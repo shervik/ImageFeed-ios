@@ -22,7 +22,7 @@
 		55EAA1742971C3F400196867 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1732971C3F400196867 /* SingleImageViewController.swift */; };
 		55EAA19629759F5700196867 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19529759F5700196867 /* UILabel+Extensions.swift */; };
 		55EAA19A2976C1A100196867 /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1992976C1A100196867 /* AlertModel.swift */; };
-		55EAA19D2976C20400196867 /* ImageCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19C2976C20400196867 /* ImageCellModel.swift */; };
+		55EAA19D2976C20400196867 /* PhotoResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19C2976C20400196867 /* PhotoResult.swift */; };
 		55EAA19F2976C2F300196867 /* ProfileResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA19E2976C2F300196867 /* ProfileResult.swift */; };
 		55EAA1A12976C3D300196867 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1A02976C3D300196867 /* AlertPresenter.swift */; };
 		55EAA1A9297EAE0000196867 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */; };
@@ -40,6 +40,8 @@
 		55EAA1E229B4DBDA00196867 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1E129B4DBDA00196867 /* ProfileImageService.swift */; };
 		55EAA1E529B5229000196867 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 55EAA1E429B5229000196867 /* Kingfisher */; };
 		55EAA1E829B6245F00196867 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 55EAA1E729B6245F00196867 /* SwiftKeychainWrapper */; };
+		55EAA1EC29BD029400196867 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1EB29BD029400196867 /* ImagesListService.swift */; };
+		55EAA1EE29BD071100196867 /* ImagesListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAA1ED29BD071100196867 /* ImagesListPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,7 +62,7 @@
 		55EAA1732971C3F400196867 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		55EAA19529759F5700196867 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UILabel+Extensions.swift"; path = "Helpers/UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		55EAA1992976C1A100196867 /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
-		55EAA19C2976C20400196867 /* ImageCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCellModel.swift; sourceTree = "<group>"; };
+		55EAA19C2976C20400196867 /* PhotoResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResult.swift; sourceTree = "<group>"; };
 		55EAA19E2976C2F300196867 /* ProfileResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileResult.swift; sourceTree = "<group>"; };
 		55EAA1A02976C3D300196867 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		55EAA1A8297EAE0000196867 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
@@ -75,6 +77,8 @@
 		55EAA1CD29A697FC00196867 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		55EAA1DC29B3D50100196867 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIBlockingProgressHUD.swift; path = Helpers/UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		55EAA1E129B4DBDA00196867 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
+		55EAA1EB29BD029400196867 /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
+		55EAA1ED29BD071100196867 /* ImagesListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +168,7 @@
 				55EAA157296586CF00196867 /* GradientView.swift */,
 				55EAA13A29521F7C00196867 /* ImagesListViewController.swift */,
 				55EAA1512952304C00196867 /* ImagesListCell.swift */,
+				55EAA1ED29BD071100196867 /* ImagesListPresenter.swift */,
 			);
 			path = ImagesListView;
 			sourceTree = "<group>";
@@ -173,7 +178,7 @@
 			children = (
 				55EAA1B5299FA26E00196867 /* OAuthTokenResponseBody.swift */,
 				55EAA1992976C1A100196867 /* AlertModel.swift */,
-				55EAA19C2976C20400196867 /* ImageCellModel.swift */,
+				55EAA19C2976C20400196867 /* PhotoResult.swift */,
 				55EAA19E2976C2F300196867 /* ProfileResult.swift */,
 			);
 			path = Models;
@@ -185,6 +190,7 @@
 				55EAA1DE29B3D80600196867 /* Profile */,
 				55EAA1C729A387DA00196867 /* OAuth2 */,
 				55EAA1C529A3864000196867 /* NetworkService.swift */,
+				55EAA1EB29BD029400196867 /* ImagesListService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -323,7 +329,7 @@
 				55EAA19A2976C1A100196867 /* AlertModel.swift in Sources */,
 				55EAA13729521F7C00196867 /* AppDelegate.swift in Sources */,
 				55EAA1B2299A444C00196867 /* WebViewViewController.swift in Sources */,
-				55EAA19D2976C20400196867 /* ImageCellModel.swift in Sources */,
+				55EAA19D2976C20400196867 /* PhotoResult.swift in Sources */,
 				55EAA13929521F7C00196867 /* SceneDelegate.swift in Sources */,
 				55EAA1CE29A697FC00196867 /* ProfileService.swift in Sources */,
 				55EAA14C2952265200196867 /* UIColor+Extensions.swift in Sources */,
@@ -331,12 +337,14 @@
 				55EAA15B2965992B00196867 /* ProfileViewController.swift in Sources */,
 				55EAA1B0299A379200196867 /* AuthViewController.swift in Sources */,
 				55EAA16C2971562B00196867 /* UIFont+Extensions.swift in Sources */,
+				55EAA1EE29BD071100196867 /* ImagesListPresenter.swift in Sources */,
 				55EAA1A12976C3D300196867 /* AlertPresenter.swift in Sources */,
 				55EAA1CA29A3D75100196867 /* SplashViewController.swift in Sources */,
 				55EAA16F29715A6E00196867 /* TabBarController.swift in Sources */,
 				55EAA1A9297EAE0000196867 /* ProfilePresenter.swift in Sources */,
 				55EAA1E229B4DBDA00196867 /* ProfileImageService.swift in Sources */,
 				55EAA1742971C3F400196867 /* SingleImageViewController.swift in Sources */,
+				55EAA1EC29BD029400196867 /* ImagesListService.swift in Sources */,
 				55EAA154295DD4F000196867 /* Date+Extensions.swift in Sources */,
 				55EAA1C129A02D8200196867 /* OAuth2TokenStorage.swift in Sources */,
 				55EAA19F2976C2F300196867 /* ProfileResult.swift in Sources */,
