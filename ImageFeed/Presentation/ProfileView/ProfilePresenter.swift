@@ -7,46 +7,60 @@
 
 import Foundation
 
-protocol ProfilePresenterDelegate: AnyObject {
-    func presentProfile(_ profile: ProfileModel?)
+protocol ProfilePresenterProtocol: AnyObject {
+    func presentProfile()
+    func presentAlert()
+    func updateAvatar()
 }
 
-final class ProfilePresenter {
-    private let profileService: ProfileService
-    private weak var delegate : ProfilePresenterDelegate?
+final class ProfilePresenter: ProfilePresenterProtocol {
+    private var profileService = ProfileService.shared
+    private var profileImageService = ProfileImageService.shared
+    private var tokenStorage: OAuth2TokenStorage
     private var alertPresenter: AlertPresenterProtocol?
+    private weak var viewController: ProfileViewControllerProtocol?
 
-    init(profileService: ProfileService, delegate: ProfilePresenterDelegate, alert: AlertPresenterProtocol) {
-        self.profileService = profileService
-        self.delegate = delegate
+    init(viewController: ProfileViewControllerProtocol, alert: AlertPresenterProtocol) {
         self.alertPresenter = alert
+        self.viewController = viewController
+        self.tokenStorage = OAuth2TokenStorage()
     }
 
-    func getSelfProfile() {
-        profileService.fetchProfileData() { result in
-            switch result {
-            case .success(let body):
-                let profileModel = ProfileModel(username: body.username,
-                                                firstName: body.firstName,
-                                                lastName: body.lastName,
-                                                bio: body.bio)
-
-                self.delegate?.presentProfile(profileModel)
-            case .failure(let failure):
-                print(failure)
-            }
-        }
-    }
+    // MARK: - ProfileDelegate
 
     func presentAlert() {
         let alertExit = AlertModel(
             title: "Пока, пока!",
             message: "Уверены, что хотите выйти?",
             primaryButtonText: "Да",
-            primaryCompletion: { print("press yes") },
+            primaryCompletion: {
+                self.tokenStorage.token = nil
+                WebViewViewController.clean()
+                self.viewController?.didExitFromAccount()
+            },
             secondButtonText: "Нет",
-            secondCompletion:  { print("press no") })
+            secondCompletion:  { return })
 
         alertPresenter?.showAlert(alert: alertExit)
+    }
+
+    func presentProfile() {
+        guard let profileModel = profileService.profile else { return }
+        let viewModel = convertToViewModel(model: profileModel)
+        viewController?.showProfile(viewModel)
+    }
+
+    func updateAvatar() {
+        if let profileImageURL = profileImageService.avatarURL,
+           let url = URL(string: profileImageURL) {
+            viewController?.showAvatar(urlImage: url)
+        }
+    }
+
+    private func convertToViewModel(model: ProfileModel) -> ProfileViewModel {
+        return ProfileViewModel(username: model.username,
+                                fullName: "\(model.firstName) \(model.lastName)",
+                                loginName: "@\(model.username)",
+                                bio: model.bio ?? "Hello world!")
     }
 }

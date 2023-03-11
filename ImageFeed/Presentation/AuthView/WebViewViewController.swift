@@ -20,6 +20,7 @@ protocol WebViewViewControllerDelegate: AnyObject {
 final class WebViewViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
 
+    private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
 
     private lazy var webView = WKWebView()
@@ -29,21 +30,11 @@ final class WebViewViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        webView.addObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            options: .new,
-            context: nil)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        webView.removeObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            context: nil
-        )
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [.new]) { [weak self] _, _ in
+                 self?.updateProgress()
+             }
     }
 
     override func viewDidLoad() {
@@ -59,16 +50,13 @@ final class WebViewViewController: UIViewController {
         configConstraint()
     }
 
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey : Any]?,
-        context: UnsafeMutableRawPointer?
-    ) {
-        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+    static func clean() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        let dataStore = WKWebsiteDataStore.default()
+        dataStore.fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                dataStore.removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
         }
     }
 
