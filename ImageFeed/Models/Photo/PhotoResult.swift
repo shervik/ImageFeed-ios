@@ -9,14 +9,18 @@ import Foundation
 
 typealias PhotoModel = [PhotoModelElement]
 
+struct LikesModel: Decodable {
+    var photo: PhotoModelElement
+}
+
 struct PhotoModelElement: Decodable {
     var id: String
-    var createdAt, updatedAt: Date
+    var createdAt, updatedAt: String?
     var width, height: Int
     var color, blurHash: String
     var likes: Int
     var likedByUser: Bool
-    var description: String
+    var description: String?
     var urls: UrlsResult
 
     struct UrlsResult: Decodable {
@@ -34,16 +38,4 @@ struct PhotoModelElement: Decodable {
         case likedByUser = "liked_by_user"
         case description, urls
     }
-}
-
-
-
-struct PhotoViewModel {
-    let id: String
-    let size: CGSize
-    let createdAt: Date?
-    let welcomeDescription: String?
-    let thumbImageURL: String
-    let largeImageURL: String
-    let isLiked: Bool
 }

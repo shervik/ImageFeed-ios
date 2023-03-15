@@ -13,6 +13,7 @@ private enum Constants {
     static let anchorTrailing: CGFloat = 24
     static let anchorTop: CGFloat = 32
     static let spacing: CGFloat = 8
+    static let avatarSize: CGFloat = 70
 }
 
 protocol ProfileViewControllerProtocol: AnyObject {
@@ -25,7 +26,6 @@ final class ProfileViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
     
     private var profilePresenter: ProfilePresenterProtocol?
-    private var profileImageServiceObserver: NSObjectProtocol?
 
     private lazy var avatarImage = UIImageView()
     private lazy var personalNameLabel = UILabel()
@@ -55,17 +55,7 @@ final class ProfileViewController: UIViewController {
         view.backgroundColor = .ypBlack
         profilePresenter = ProfilePresenter(viewController: self, alert: AlertPresenter(delegate: self))
         profilePresenter?.presentProfile()
-
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.profilePresenter?.updateAvatar()
-            }
-        profilePresenter?.updateAvatar()
+        profilePresenter?.addObserver()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -122,8 +112,8 @@ extension ProfileViewController {
     private func configAvatar() {
         avatarImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            avatarImage.heightAnchor.constraint(equalToConstant: 70),
-            avatarImage.widthAnchor.constraint(equalToConstant: 70)
+            avatarImage.heightAnchor.constraint(equalToConstant: Constants.avatarSize),
+            avatarImage.widthAnchor.constraint(equalToConstant: Constants.avatarSize)
         ])
         avatarImage.contentMode = .scaleAspectFill
     }
@@ -146,7 +136,7 @@ extension ProfileViewController: ProfileViewControllerProtocol {
                                 placeholder: UIImage(named: "avatar_placeholder"),
                                 options: [.processor(processor)])
     }
-    
+
     func showProfile(_ model: ProfileViewModel?) {
         guard let model = model else { return }
         configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfBold)

@@ -10,7 +10,7 @@ import Foundation
 protocol ProfilePresenterProtocol: AnyObject {
     func presentProfile()
     func presentAlert()
-    func updateAvatar()
+    func addObserver()
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
@@ -19,14 +19,13 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     private var tokenStorage: OAuth2TokenStorage
     private var alertPresenter: AlertPresenterProtocol?
     private weak var viewController: ProfileViewControllerProtocol?
+    private var profileImageServiceObserver: NSObjectProtocol?
 
     init(viewController: ProfileViewControllerProtocol, alert: AlertPresenterProtocol) {
         self.alertPresenter = alert
         self.viewController = viewController
         self.tokenStorage = OAuth2TokenStorage()
     }
-
-    // MARK: - ProfileDelegate
 
     func presentAlert() {
         let alertExit = AlertModel(
@@ -50,7 +49,18 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         viewController?.showProfile(viewModel)
     }
 
-    func updateAvatar() {
+    func addObserver() {
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main) { [weak self] _ in
+                    self?.updateAvatar()
+                }
+        updateAvatar()
+    }
+
+    private func updateAvatar() {
         if let profileImageURL = profileImageService.avatarURL,
            let url = URL(string: profileImageURL) {
             viewController?.showAvatar(urlImage: url)

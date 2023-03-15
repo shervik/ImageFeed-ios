@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol AuthRouting {
+protocol AuthRouting: AnyObject {
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void)
 }
 
@@ -15,7 +15,7 @@ final class OAuth2Service: AuthRouting {
     static let shared = OAuth2Service()
     
     private var storage = OAuth2TokenStorage()
-    private var networkService = NetworkService()
+    private let networkService = NetworkService()
     private var code: String?
     private var task: URLSessionTask?
 
@@ -32,34 +32,42 @@ final class OAuth2Service: AuthRouting {
 
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        if self.code == code { return }
-        task?.cancel()
-
-        self.code = code
+        if self.code != code { return }
+//        task?.cancel()
 
         fetchToken(code: code) { result in
+            self.code = nil
+
             switch result {
             case .success(let body):
                 self.authToken = body.accessToken
                 completion(.success(body.accessToken))
-                self.code = nil
+
             case .failure(let error):
                 completion(.failure(error))
-                self.code = nil
             }
         }
+        
+        self.code = code
     }
 
     private func fetchToken(code: String, completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void) {
-        networkService.data(for: authTokenRequest(code: code)) { result in
+        if task != nil { return }
+        task?.cancel()
+
+        task = networkService.data(for: authTokenRequest(code: code)) { result in
+            self.task = nil
+
             switch result {
             case .success(let data):
                 guard let data = self.networkService.decodeJson(type: OAuthTokenResponseBody.self, data: data) else { return }
                 completion(.success(data))
+                
             case .failure(let error):
                 completion(.failure(error))
             }
         }
+        task?.resume()
     }
 
     private func authTokenRequest(code: String) -> URLRequest {

@@ -13,12 +13,32 @@ enum NetworkError: Error {
     case urlSessionError
 }
 
-protocol NetworkRouting {
-    func data(for: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
+extension NetworkError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .httpStatusCode(_), .urlRequestError(_), .urlSessionError:
+            return "Что-то пошло не так("
+        }
+    }
+
+    var failureReason: String? {
+        switch self {
+        case .httpStatusCode(let int):
+            return "Не удалось войти в систему. Код: \(int)"
+        case .urlRequestError(let error):
+            return "Не удалось отправить запрос. \(error)"
+        case .urlSessionError:
+            return "Ошибка"
+        }
+    }
+}
+
+protocol NetworkRouting: AnyObject {
+    func data(for: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) -> URLSessionTask
 }
 
 final class NetworkService: NetworkRouting {
-    private let urlSession = URLSession.shared
+    let urlSession = URLSession.shared
 
     func makeHTTPRequest(
         baseURL: URL = defaultBaseURL,
@@ -35,7 +55,7 @@ final class NetworkService: NetworkRouting {
             return request
         }
 
-    func data(for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) {
+    func data(for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) -> URLSessionTask {
         let handler: (Result<Data, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
@@ -60,6 +80,7 @@ final class NetworkService: NetworkRouting {
         }
 
         task.resume()
+        return task
     }
 
     func decodeJson<T: Decodable>(type: T.Type, data: Data?) -> T? {

@@ -74,9 +74,8 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success(let token):
                 self.fetchProfile(token)
-            case .failure:
-                self.presentAlert()
-                break
+            case .failure(let error):
+                self.presentAlert(with: error)
             }
         }
     }
@@ -87,22 +86,23 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .success(let body):
                 self.profileImageService.fetchProfileImageURL(username: body.username) { _ in }
                 self.switchToTabBarController()
-            case .failure:
-                self.presentAlert()
+            case .failure(let error):
+                self.presentAlert(with: error)
             }
         }
     }
 
-    private func presentAlert() {
-        let alertError = AlertModel(
-            title: "Что-то пошло не так(",
-            message: "Не удалось войти в систему",
-            primaryButtonText: "Ок",
-            primaryCompletion: { print("press yes") },
-            secondButtonText: nil,
-            secondCompletion: nil
-        )
-
-        alertPresenter?.showAlert(alert: alertError)
+    private func presentAlert(with error: Error) {
+        if let localized = error as? LocalizedError {
+            let alertError = AlertModel(
+                title: localized.errorDescription ?? "Что-то пошло не так(",
+                message: localized.failureReason ?? error.localizedDescription,
+                primaryButtonText: "Ок",
+                primaryCompletion: nil,
+                secondButtonText: nil,
+                secondCompletion: nil
+            )
+            alertPresenter?.showAlert(alert: alertError)
+        }
     }
 }

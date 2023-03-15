@@ -16,7 +16,7 @@ final class ProfileImageService: ProfileImageServiceProtocol {
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
-    private var networkService = NetworkService()
+    private let networkService = NetworkService()
     private var username: String?
     private var task: URLSessionTask?
     private var currentAvatar: String?
@@ -39,14 +39,15 @@ final class ProfileImageService: ProfileImageServiceProtocol {
 
         self.username = username
 
-        networkService.data(for: profileImageRequest(username: username)) { result in
+        task = networkService.data(for: profileImageRequest(username: username)) { result in
+            self.username = nil
+
             switch result {
             case .success(let success):
                 guard let data = self.networkService.decodeJson(type: ProfileImage.self, data: success) else { return }
                 let image = data.profileImage.large
                 self.currentAvatar = image
                 completion(.success(image))
-                self.username = nil
 
                 NotificationCenter.default
                     .post(
@@ -56,9 +57,9 @@ final class ProfileImageService: ProfileImageServiceProtocol {
 
             case .failure(let error):
                 completion(.failure(error))
-                self.username = nil
             }
         }
+        task?.resume()
     }
 
     private func profileImageRequest(username: String) -> URLRequest {

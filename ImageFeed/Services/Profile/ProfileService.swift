@@ -15,7 +15,7 @@ protocol ProfileServiceProtocol: AnyObject {
 final class ProfileService: ProfileServiceProtocol {
     static let shared = ProfileService()
 
-    private var networkService = NetworkService()
+    private let networkService = NetworkService()
     private var token: String?
     private var task: URLSessionTask?
     private var currentProfile: ProfileModel?
@@ -48,19 +48,21 @@ final class ProfileService: ProfileServiceProtocol {
 
         self.token = token
 
-        networkService.data(for: profileRequest(token)) { result in
+        task = networkService.data(for: profileRequest(token)) { result in
+            self.token = nil
+            self.task = nil
+            
             switch result {
             case .success(let success):
                 guard let data = self.networkService.decodeJson(type: ProfileModel.self, data: success) else { return }
                 self.currentProfile = data
                 guard let profile = self.currentProfile else { return }
                 completion(.success(profile))
-                self.token = nil
 
             case .failure(let error):
                 completion(.failure(error))
-                self.token = nil
             }
         }
+        task?.resume()
     }
 }

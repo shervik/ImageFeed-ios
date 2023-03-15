@@ -8,9 +8,16 @@
 import Foundation
 
 extension Date {
+
     var dateString: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d MMMM yyyy"
-        return dateFormatter.string(from: self)
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter.string(from: self)
+    }
+
+    func dateFormatter(dateInString: String) -> Date {
+        let dateFormatter = ISO8601DateFormatter()
+        return dateFormatter.date(from: dateInString) ?? Date()
     }
 }
