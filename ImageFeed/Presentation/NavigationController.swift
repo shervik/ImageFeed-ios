@@ -18,6 +18,10 @@ final class NavigationContoller: UINavigationController {
         self.view?.backgroundColor = .ypBlack
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+            return topViewController?.preferredStatusBarStyle ?? .lightContent
+        }
+
     override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
     }

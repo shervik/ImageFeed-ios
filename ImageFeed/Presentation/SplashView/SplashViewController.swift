@@ -19,6 +19,10 @@ final class SplashViewController: UIViewController {
 
     private lazy var splashImage = UIImageView()
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypBlack
@@ -70,6 +74,7 @@ extension SplashViewController: AuthViewControllerDelegate {
     private func fetchOAuthToken(_ code: String) {
         oauth2Service.fetchAuthToken(code) { [weak self] result in
             guard let self = self else { return }
+            
             UIBlockingProgressHUD.dismiss()
             switch result {
             case .success(let token):
@@ -81,7 +86,9 @@ extension SplashViewController: AuthViewControllerDelegate {
     }
     
     private func fetchProfile(_ token: String) {
-        profileService.fetchProfileData(token) { result in
+        profileService.fetchProfileData(token) {  [weak self] result in
+            guard let self = self else { return }
+
             switch result {
             case .success(let body):
                 self.profileImageService.fetchProfileImageURL(username: body.username) { _ in }

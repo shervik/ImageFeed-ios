@@ -35,7 +35,9 @@ final class ImagesListService: ImagesListServiceProtocol {
 
         let nextPage = lastLoadedPage == nil ? 1 : (lastLoadedPage ?? 0) + 1
 
-        task = networkService.data(for: photosRequest(page: nextPage)) { result in
+        task = networkService.data(for: photosRequest(page: nextPage)) { [weak self] result in
+            guard let self = self else { return }
+
             self.task = nil
 
             switch result {
@@ -58,7 +60,8 @@ final class ImagesListService: ImagesListServiceProtocol {
 
         let request = isLike ? postLikesRequest(photo: photoId) : deleteLikesRequest(photo: photoId)
 
-        task = networkService.data(for: request) { result in
+        task = networkService.data(for: request) { [weak self] result in
+            guard let self = self else { return }
             self.task = nil
 
             switch result {

@@ -48,7 +48,8 @@ final class ProfileService: ProfileServiceProtocol {
 
         self.token = token
 
-        task = networkService.data(for: profileRequest(token)) { result in
+        task = networkService.data(for: profileRequest(token)) { [weak self] result in
+            guard let self = self else { return }
             self.token = nil
             self.task = nil
             

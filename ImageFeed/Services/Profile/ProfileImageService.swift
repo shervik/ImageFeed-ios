@@ -39,7 +39,8 @@ final class ProfileImageService: ProfileImageServiceProtocol {
 
         self.username = username
 
-        task = networkService.data(for: profileImageRequest(username: username)) { result in
+        task = networkService.data(for: profileImageRequest(username: username)) { [weak self ]result in
+            guard let self = self else { return }
             self.username = nil
 
             switch result {

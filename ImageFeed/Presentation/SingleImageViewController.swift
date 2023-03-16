@@ -29,6 +29,10 @@ final class SingleImageViewController: UIViewController {
             rescaleAndCenterImageInScrollView(image: image)
         }
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,8 +61,8 @@ final class SingleImageViewController: UIViewController {
             primaryButtonText: "Не надо",
             primaryCompletion: nil,
             secondButtonText: "Повторить",
-            secondCompletion: {
-                self.showLargeImage()
+            secondCompletion: { [weak self] in
+                self?.showLargeImage()
             }
         )
         alertPresenter = AlertPresenter(delegate: self)

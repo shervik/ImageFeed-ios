@@ -75,10 +75,8 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.identifier, for: indexPath)
-        guard let cell = cell as? ImagesListCell else {
-            return UITableViewCell()
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.identifier, for: indexPath)as? ImagesListCell
+        else { return UITableViewCell() }
         
         cell.delegate = self
         cell.configCell(for: tableView, from: photos, with: indexPath)
@@ -125,7 +123,9 @@ extension ImagesListViewController: ImagesListCellDelegate {
 
         UIBlockingProgressHUD.show()
 
-        presenter?.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
+        presenter?.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self = self else { return }
+
             switch result {
             case .success:
                 self.photos = self.presenter?.getPhoto() ?? []

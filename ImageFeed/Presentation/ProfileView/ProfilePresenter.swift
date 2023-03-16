@@ -32,7 +32,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             title: "Пока, пока!",
             message: "Уверены, что хотите выйти?",
             primaryButtonText: "Да",
-            primaryCompletion: {
+            primaryCompletion: { [weak self] in
+                guard let self = self else { return }
+
                 self.tokenStorage.token = nil
                 WebViewViewController.clean()
                 self.viewController?.didExitFromAccount()

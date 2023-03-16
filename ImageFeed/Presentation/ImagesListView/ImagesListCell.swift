@@ -99,7 +99,11 @@ extension ImagesListCell {
         selectionStyle = .none
         backgroundColor = .clear
 
-        labelDate.text = photo.createdAt?.dateString
+        setIsLiked(photos[indexPath.row].isLiked)
+
+        if let dateCreated = photo.createdAt {
+            labelDate.text = DateFormatter.longDateFormatter.string(from: dateCreated)
+        }
     }
 
     private func configureLikeButton() {

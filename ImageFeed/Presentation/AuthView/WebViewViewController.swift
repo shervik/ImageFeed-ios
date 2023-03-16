@@ -134,7 +134,8 @@ extension WebViewViewController {
     private func configProgress() {
         view.addSubview(progressView)
 
-        progressView.progressTintColor = .ypBlack
+        progressView.tintColor = .ypBlack
+//        progressView.progressTintColor = .ypBlack
         progressView.trackTintColor = .ypBackground
     }
 

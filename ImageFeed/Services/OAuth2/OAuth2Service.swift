@@ -33,9 +33,9 @@ final class OAuth2Service: AuthRouting {
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         if self.code == code { return }
-        task?.cancel()
 
-        fetchToken(code: code) { result in
+        fetchToken(code: code) { [weak self] result in
+            guard let self = self else { return }
             self.code = nil
 
             switch result {
@@ -55,7 +55,8 @@ final class OAuth2Service: AuthRouting {
         if task != nil { return }
         task?.cancel()
 
-        task = networkService.data(for: authTokenRequest(code: code)) { result in
+        task = networkService.data(for: authTokenRequest(code: code)) { [weak self] result in
+            guard let self = self else { return }
             self.task = nil
 
             switch result {

@@ -69,7 +69,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
             PhotoViewModel(
                 id: photo.id,
                 size: CGSize(width: photo.width, height: photo.height),
-                createdAt: Date().dateFormatter(dateInString: photo.createdAt ?? ""),
+                createdAt: DateFormatter.isoDateFormatter.date(from: photo.createdAt ?? ""),
                 welcomeDescription: photo.description ?? "Hey!!!",
                 thumbImageURL: photo.urls.thumb,
                 largeImageURL: photo.urls.full,

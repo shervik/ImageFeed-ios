@@ -14,6 +14,7 @@ private enum Constants {
     static let anchorTop: CGFloat = 32
     static let spacing: CGFloat = 8
     static let avatarSize: CGFloat = 70
+    static let avatarCornerRadius: CGFloat = 35
 }
 
 protocol ProfileViewControllerProtocol: AnyObject {
@@ -115,6 +116,8 @@ extension ProfileViewController {
             avatarImage.heightAnchor.constraint(equalToConstant: Constants.avatarSize),
             avatarImage.widthAnchor.constraint(equalToConstant: Constants.avatarSize)
         ])
+        avatarImage.clipsToBounds = true
+        avatarImage.layer.cornerRadius = Constants.avatarCornerRadius
         avatarImage.contentMode = .scaleAspectFill
     }
 }
@@ -131,7 +134,7 @@ extension ProfileViewController: ProfileViewControllerProtocol {
         cache.memoryStorage.config.expiration = .seconds(1800)
 
         avatarImage.kf.indicatorType = .activity
-        let processor = RoundCornerImageProcessor(cornerRadius: 60)
+        let processor = RoundCornerImageProcessor(cornerRadius: Constants.avatarCornerRadius)
         avatarImage.kf.setImage(with: urlImage,
                                 placeholder: UIImage(named: "avatar_placeholder"),
                                 options: [.processor(processor)])
