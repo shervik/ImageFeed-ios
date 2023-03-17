@@ -8,8 +8,7 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    private var profileController: ProfileViewController?
-
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
@@ -23,14 +22,8 @@ final class TabBarController: UITabBarController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let imagesListController = ImagesListViewController()
-        let imagesListPresenter = ImagesListPresenter(imagesListHelper: ImagesListHelper(),
-                                                      alert: AlertPresenter(delegate: self))
-        imagesListController.configure(imagesListPresenter)
-
-        let profileController = ProfileViewController()
-        let profilePresenter = ProfilePresenter(alert: AlertPresenter(delegate: self))
-        profileController.configure(profilePresenter)
+        let imagesListItem = ImagesListViewController()
+        let profileItem = ProfileViewController()
 
         let iconMain = UITabBarItem(title: nil,
                                     image: UIImage(named: "tab_editorial_disabled"),
@@ -40,9 +33,9 @@ final class TabBarController: UITabBarController {
                                        image: UIImage(named: "tab_profile_disabled"),
                                        selectedImage: UIImage(named: "tab_profile_active")
         )
-        imagesListController.tabBarItem = iconMain
-        profileController.tabBarItem = iconProfile
+        imagesListItem.tabBarItem = iconMain
+        profileItem.tabBarItem = iconProfile
 
-        self.viewControllers = [NavigationContoller(rootViewController: imagesListController), profileController]
+        self.viewControllers = [NavigationContoller(rootViewController: imagesListItem), profileItem]
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ProfileViewModel {
+struct ProfileViewModel {
     var username: String
     var fullName: String
     var loginName: String
