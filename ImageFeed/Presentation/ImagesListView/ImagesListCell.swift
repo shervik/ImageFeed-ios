@@ -109,7 +109,6 @@ extension ImagesListCell {
     private func configureLikeButton() {
         likeButton.setImage(UIImage(named: "like_disabled"), for: .normal)
         likeButton.setImage(UIImage(named: "like_active"), for: .selected)
-        likeButton.accessibilityIdentifier = "LikeButton"
         likeButton.addTarget(self, action: #selector(likeButtonClicked), for: .touchUpInside)
     }
 

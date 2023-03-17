@@ -8,49 +8,30 @@
 import UIKit
 import Kingfisher
 
-public protocol ImagesListViewControllerProtocol: AnyObject {
-    func configure(_ presenter: ImagesListPresenterProtocol)
-}
-
-final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
+final class ImagesListViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
-
-    private let tableView = UITableView(frame: .null, style: .plain)
     private lazy var photos: PhotosViewModel = []
-    private var imageServiceObserver: NSObjectProtocol?
+    private let tableView = UITableView(frame: .null, style: .plain)
+    private lazy var singleImageView = SingleImageViewController()
 
     private var presenter: ImagesListPresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        imageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ImagesListService.didChangeNotification,
-                object: nil,
-                queue: .main) { [weak self] _ in
-                    self?.updateTableViewAnimated()
-                }
-        presenter?.fetchPhotosNextPage()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         view.backgroundColor = .ypBlack
         configTable()
+        presenter = ImagesListPresenter(imagesService: ImagesListService(),
+                                        viewController: self,
+                                        alert: AlertPresenter(delegate: self))
+        presenter?.addObserver(tableView)
     }
 
-    func configure(_ presenter: ImagesListPresenterProtocol) {
-        self.presenter = presenter
-        presenter.view = self
-    }
 
-    private func updateTableViewAnimated() {
-        presenter?.getPhoto()
+    func updateTableViewAnimated() {
         let oldCount = photos.count
-        let newCount = presenter?.photo?.count ?? 0
+        let newCount = presenter?.imagesService?.photos.count ?? 0
 
-        photos = presenter?.photo ?? []
+        photos = presenter?.getPhoto() ?? []
 
         if oldCount != newCount {
             tableView.performBatchUpdates {
@@ -120,13 +101,12 @@ extension ImagesListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
-            presenter?.fetchPhotosNextPage()
+            presenter?.imagesService?.fetchPhotosNextPage()
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let largeImageURL = URL(string: photos[indexPath.row].largeImageURL) else { return }
-        let singleImageView = SingleImageViewController()
         singleImageView.largeImageURL = largeImageURL
         singleImageView.showLargeImage()
         singleImageView.modalPresentationStyle = .fullScreen
@@ -148,7 +128,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
 
             switch result {
             case .success:
-                self.photos = self.presenter?.photo ?? []
+                self.photos = self.presenter?.getPhoto() ?? []
                 cell.setIsLiked(self.photos[indexPath.row].isLiked)
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
@@ -156,5 +136,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 UIBlockingProgressHUD.dismiss()
             }
         }
+
     }
 }
