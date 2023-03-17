@@ -28,6 +28,10 @@ final class AuthViewController: UIViewController {
     private var webViewViewController = WebViewViewController()
     weak var delegate: AuthViewControllerDelegate?
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypBlack

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 private enum Constants {
     static let anchorButtonBack: CGFloat = 9
@@ -14,6 +15,9 @@ private enum Constants {
 
 final class SingleImageViewController: UIViewController {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
+
+    private var alertPresenter: AlertPresenterProtocol?
+    var largeImageURL: URL?
 
     private lazy var imageView = UIImageView()
     private lazy var buttonBack = UIButton(type: .custom)
@@ -24,6 +28,10 @@ final class SingleImageViewController: UIViewController {
             imageView.image = image
             rescaleAndCenterImageInScrollView(image: image)
         }
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
 
     override func viewDidLoad() {
@@ -44,6 +52,41 @@ final class SingleImageViewController: UIViewController {
         let activityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
         activityViewController.overrideUserInterfaceStyle = .dark
         present(activityViewController, animated: true)
+    }
+
+    func showAlert() {
+        let alertError = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Попробовать ещё раз?",
+            primaryButtonText: "Не надо",
+            primaryCompletion: nil,
+            secondButtonText: "Повторить",
+            secondCompletion: { [weak self] in
+                self?.showLargeImage()
+            }
+        )
+        alertPresenter = AlertPresenter(delegate: self)
+        alertPresenter?.showAlert(alert: alertError)
+    }
+
+    func showLargeImage() {
+        let cache = ImageCache.default
+        cache.memoryStorage.config.expiration = .seconds(1800)
+
+        UIBlockingProgressHUD.show()
+
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: largeImageURL,
+                              placeholder: UIImage(named: "image_placeholder")) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+
+            switch result {
+            case .success(let imageResult):
+                self?.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure:
+                self?.showAlert()
+            }
+        }
     }
 }
 
@@ -91,7 +134,7 @@ extension SingleImageViewController {
     private func configButtons() {
         view.addSubview(buttonBack)
         view.addSubview(buttonSharing)
-        
+
         buttonBack.setImage(UIImage(named: "nav_back_button"), for: .normal)
         buttonBack.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         buttonSharing.setImage(UIImage(named: "sharing"), for: .normal)

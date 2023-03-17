@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 private enum Constants {
     static let anchorCellHorizontal: CGFloat = 16
@@ -18,13 +19,19 @@ private enum Constants {
     static let fontLabel: CGFloat = 13
 }
 
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
+
 final class ImagesListCell: UITableViewCell {
     static let identifier = "ImagesListCell"
 
+    weak var delegate: ImagesListCellDelegate?
+
     private lazy var labelDate = UILabel()
-    lazy var imageCell = UIImageView()
-    lazy var likeButton = UIButton()
-    lazy var gradientView = GradientView()
+    private lazy var imageCell = UIImageView()
+    private lazy var likeButton = UIButton()
+    private lazy var gradientView = GradientView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -36,6 +43,24 @@ final class ImagesListCell: UITableViewCell {
         setup()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageCell.kf.cancelDownloadTask()
+    }
+
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: self.layer)
+
+        let gradientLayer = gradientView.gradientLayer
+        let colors = [UIColor.ypBlack.withAlphaComponent(0),
+                        UIColor.ypBlack.withAlphaComponent(1)]
+        gradientView.addGradient(with: gradientLayer, colorSet: colors, locations: [0, 1])
+    }
+
+    func setIsLiked(_ isLiked: Bool) {
+        likeButton.isSelected  = isLiked
+    }
+    
     private func setup() {
         [imageCell, labelDate, likeButton, gradientView].forEach { subview in
             contentView.addSubview(subview)
@@ -45,12 +70,48 @@ final class ImagesListCell: UITableViewCell {
         configureLayoutConstraint()
         configureImageView()
         configureLabel()
+        configureLikeButton()
+
+    }
+
+    @objc private func likeButtonClicked() {
+        delegate?.imageListCellDidTapLike(self)
     }
 }
 
 // MARK: - ImagesListCell Configuration
 
 extension ImagesListCell {
+    func configCell(for tableView: UITableView, from photos: PhotosViewModel, with indexPath: IndexPath) {
+        let photo = photos[indexPath.row]
+        let imageString = photo.thumbImageURL
+        let urlImage = URL(string: imageString)
+
+        let cache = ImageCache.default
+        cache.memoryStorage.config.expiration = .seconds(1800)
+
+        imageCell.kf.indicatorType = .activity
+        imageCell.kf.setImage(with: urlImage,
+                              placeholder: UIImage(named: "image_placeholder")) { result in
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+
+        selectionStyle = .none
+        backgroundColor = .clear
+
+        setIsLiked(photos[indexPath.row].isLiked)
+
+        if let dateCreated = photo.createdAt {
+            labelDate.text = DateFormatter.longDateFormatter.string(from: dateCreated)
+        }
+    }
+
+    private func configureLikeButton() {
+        likeButton.setImage(UIImage(named: "like_disabled"), for: .normal)
+        likeButton.setImage(UIImage(named: "like_active"), for: .selected)
+        likeButton.addTarget(self, action: #selector(likeButtonClicked), for: .touchUpInside)
+    }
+
     private func configureLayoutConstraint() {
         imageCell.translatesAutoresizingMaskIntoConstraints = false
         likeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -84,7 +145,6 @@ extension ImagesListCell {
     }
 
     private func configureLabel() {
-        labelDate.text = Date().dateString
         labelDate.font.withSize(Constants.fontLabel)
         labelDate.textColor = .ypWhite
         labelDate.contentMode = .left

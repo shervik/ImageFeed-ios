@@ -8,6 +8,11 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.isTranslucent = false

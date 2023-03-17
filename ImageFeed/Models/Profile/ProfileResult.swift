@@ -30,10 +30,3 @@ struct ProfileImage: Decodable {
         case profileImage = "profile_image"
     }
 }
-
-struct ProfileViewModel {
-    var username: String
-    var fullName: String
-    var loginName: String
-    var bio: String
-}
