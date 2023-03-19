@@ -13,7 +13,8 @@ protocol AuthRouting: AnyObject {
 
 final class OAuth2Service: AuthRouting {
     static let shared = OAuth2Service()
-    
+
+    private let authConfiguration = AuthConfiguration.standard
     private var storage = OAuth2TokenStorage()
     private let networkService = NetworkService()
     private var code: String?
@@ -76,9 +77,9 @@ final class OAuth2Service: AuthRouting {
             baseURL: URL(string: "https://unsplash.com")!,
             path: "/oauth/token",
             httpMethod: "POST",
-            query: [URLQueryItem(name: "client_id", value: accessKey),
-                    URLQueryItem(name: "client_secret", value: secretKey),
-                    URLQueryItem(name: "redirect_uri", value: redirectURI),
+            query: [URLQueryItem(name: "client_id", value: authConfiguration.accessKey),
+                    URLQueryItem(name: "client_secret", value: authConfiguration.secretKey),
+                    URLQueryItem(name: "redirect_uri", value: authConfiguration.redirectURI),
                     URLQueryItem(name: "code", value: code),
                     URLQueryItem(name: "grant_type", value: "authorization_code")]
         )

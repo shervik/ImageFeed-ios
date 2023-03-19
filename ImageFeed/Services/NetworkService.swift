@@ -41,7 +41,7 @@ final class NetworkService: NetworkRouting {
     let urlSession = URLSession.shared
 
     func makeHTTPRequest(
-        baseURL: URL = defaultBaseURL,
+        baseURL: URL = AuthConfiguration.standard.defaultBaseURL,
         path: String,
         httpMethod: String,
         query: [URLQueryItem]?) -> URLRequest {
