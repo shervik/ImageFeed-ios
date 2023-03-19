@@ -5,49 +5,43 @@
 //  Created by Виктория Щербакова on 11.03.2023.
 //
 
-import UIKit
+import Foundation
 import Kingfisher
 
-protocol ImagesListPresenterProtocol: AnyObject {
-    func addObserver(_ tableView: UITableView)
-    func getPhoto() -> PhotosViewModel?
+public protocol ImagesListPresenterProtocol: AnyObject {
+    var view: ImagesListViewControllerProtocol? { get set }
+    var photo: PhotosViewModel? { get set }
+    func getPhoto()
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
-    var imagesService: ImagesListServiceProtocol? { get }
     func presentAlert(with error: Error)
+    func fetchPhotosNextPage()
 }
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
-    private weak var viewController: ImagesListViewController?
-    private(set) var imagesService: ImagesListServiceProtocol?
-    private var imageServiceObserver: NSObjectProtocol?
+    weak var view: ImagesListViewControllerProtocol?
+
+    var photo: PhotosViewModel?
+    private var imagesListHelper: ImagesListHelperProtocol
     private var alertPresenter: AlertPresenterProtocol?
 
-    init(imagesService: ImagesListServiceProtocol, viewController: ImagesListViewController, alert: AlertPresenterProtocol) {
-        self.imagesService = imagesService
-        self.viewController = viewController
+    init(imagesListHelper: ImagesListHelperProtocol, alert: AlertPresenterProtocol?) {
+        self.imagesListHelper = imagesListHelper
         self.alertPresenter = alert
     }
 
-    func addObserver(_ tableView: UITableView) {
-        imageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ImagesListService.didChangeNotification,
-                object: nil,
-                queue: .main) { [weak self] _ in
-                    self?.viewController?.updateTableViewAnimated()
-                }
-        imagesService?.fetchPhotosNextPage()
+    func fetchPhotosNextPage() {
+        imagesListHelper.loadNextPage()
     }
 
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
-        imagesService?.changeLike(photoId: photoId, isLike: isLike) { _ in
+        imagesListHelper.changeLike(photoId: photoId, isLike: isLike) { _ in
             completion(.success(()))
         }
     }
 
-    func getPhoto() -> PhotosViewModel? {
-        guard let photoModel = imagesService?.photos else { return nil}
-        return convertToViewModel(model: photoModel)
+    func getPhoto() {
+        guard let photoModel = imagesListHelper.returnPhotoModel() else { return }
+        photo = convertToViewModel(model: photoModel)
     }
 
     func presentAlert(with error: Error) {

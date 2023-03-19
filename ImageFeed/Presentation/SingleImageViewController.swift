@@ -139,6 +139,7 @@ extension SingleImageViewController {
         buttonBack.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         buttonSharing.setImage(UIImage(named: "sharing"), for: .normal)
         buttonSharing.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
+        buttonBack.accessibilityIdentifier = "Back"
     }
 
     private func configConstraint() {
