@@ -17,16 +17,17 @@ private enum Constants {
     static let avatarCornerRadius: CGFloat = 35
 }
 
-protocol ProfileViewControllerProtocol: AnyObject {
+public protocol ProfileViewControllerProtocol: AnyObject {
     func showProfile(_ model: ProfileViewModel?)
     func showAvatar(urlImage: URL)
     func didExitFromAccount()
+    func configure(_ presenter: ProfilePresenterProtocol)
 }
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
-    
-    private var profilePresenter: ProfilePresenterProtocol?
+
+    private var presenter: ProfilePresenterProtocol?
 
     private lazy var avatarImage = UIImageView()
     private lazy var personalNameLabel = UILabel()
@@ -53,21 +54,47 @@ final class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypBlack
-        profilePresenter = ProfilePresenter(viewController: self, alert: AlertPresenter(delegate: self))
-        profilePresenter?.presentProfile()
-        profilePresenter?.addObserver()
+        presenter?.addObserver()
+        presenter?.presentProfile()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        view.backgroundColor = .ypBlack
         configStackView()
         configExitButton()
         configAvatar()
     }
 
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        presenter.view = self
+    }
+
+    func didExitFromAccount() {
+        navigationController?.popToRootViewController(animated: true)
+    }
+
+    func showAvatar(urlImage: URL) {
+        let cache = ImageCache.default
+        cache.memoryStorage.config.expiration = .seconds(1800)
+
+        avatarImage.kf.indicatorType = .activity
+        let processor = RoundCornerImageProcessor(cornerRadius: Constants.avatarCornerRadius)
+        avatarImage.kf.setImage(with: urlImage,
+                                placeholder: UIImage(named: "avatar_placeholder"),
+                                options: [.processor(processor)])
+    }
+
+    func showProfile(_ model: ProfileViewModel?) {
+        guard let model = model else { return }
+        configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfBold)
+        configLabel(nicknameLabel, text: model.loginName)
+        configLabel(descriptionLabel, text: model.bio)
+    }
+
     @objc private func didTapExitButton() {
-        profilePresenter?.presentAlert()
+        presenter?.presentAlert()
     }
 }
 
@@ -98,6 +125,7 @@ extension ProfileViewController {
     private func configExitButton() {
         exitButton.setImage(UIImage(named: "exit"), for: .normal)
         exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
+        exitButton.accessibilityIdentifier = "Exit"
     }
 
     private func configLabel(_ label: UILabel, text: String, font: UIFont? = UIFont.sfRegular) {
@@ -119,31 +147,5 @@ extension ProfileViewController {
         avatarImage.clipsToBounds = true
         avatarImage.layer.cornerRadius = Constants.avatarCornerRadius
         avatarImage.contentMode = .scaleAspectFill
-    }
-}
-
-// MARK: - Action
-
-extension ProfileViewController: ProfileViewControllerProtocol {
-    func didExitFromAccount() {
-        navigationController?.popToRootViewController(animated: true)
-    }
-    
-    func showAvatar(urlImage: URL) {
-        let cache = ImageCache.default
-        cache.memoryStorage.config.expiration = .seconds(1800)
-
-        avatarImage.kf.indicatorType = .activity
-        let processor = RoundCornerImageProcessor(cornerRadius: Constants.avatarCornerRadius)
-        avatarImage.kf.setImage(with: urlImage,
-                                placeholder: UIImage(named: "avatar_placeholder"),
-                                options: [.processor(processor)])
-    }
-
-    func showProfile(_ model: ProfileViewModel?) {
-        guard let model = model else { return }
-        configLabel(personalNameLabel, text: model.fullName, font: UIFont.sfBold)
-        configLabel(nicknameLabel, text: model.loginName)
-        configLabel(descriptionLabel, text: model.bio)
     }
 }

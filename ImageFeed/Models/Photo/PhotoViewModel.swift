@@ -7,9 +7,9 @@
 
 import Foundation
 
-typealias PhotosViewModel = [PhotoViewModel]
+public typealias PhotosViewModel = [PhotoViewModel]
 
-struct PhotoViewModel {
+public struct PhotoViewModel {
     let id: String
     let size: CGSize
     let createdAt: Date?

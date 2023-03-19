@@ -11,7 +11,7 @@ import XCTest
 final class ImagesListServiceTests: XCTestCase {
 
     func testFetchPhotos() {
-        let service = ImagesListService()
+        let service = ImagesListService.shared
 
         let expectation = self.expectation(description: "Wait for Notification")
         NotificationCenter.default.addObserver(
@@ -22,7 +22,7 @@ final class ImagesListServiceTests: XCTestCase {
             }
 
         service.fetchPhotosNextPage()
-// TODO: Сделать проверку на 20 + элементов
+
         wait(for: [expectation], timeout: 10)
         XCTAssertEqual(service.photos.count, 10)
     }

@@ -14,6 +14,8 @@ protocol ImagesListServiceProtocol: AnyObject {
 }
 
 final class ImagesListService: ImagesListServiceProtocol {
+    static let shared = ImagesListService()
+
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
     private let networkService = NetworkService()
@@ -27,6 +29,8 @@ final class ImagesListService: ImagesListServiceProtocol {
                     object: self)
         }
     }
+
+    private init() { }
 
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
