@@ -8,22 +8,24 @@
 import Foundation
 
 protocol ProfilePresenterProtocol: AnyObject {
+    var view: ProfileViewControllerProtocol? { get set }
     func presentProfile()
     func presentAlert()
     func addObserver()
+    func convertToViewModel(model: ProfileModel) -> ProfileViewModel
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
+    weak var view: ProfileViewControllerProtocol?
+    
     private var profileService = ProfileService.shared
     private var profileImageService = ProfileImageService.shared
-    private var tokenStorage: OAuth2TokenStorage
+    private var tokenStorage: OAuth2TokenStorage?
     private var alertPresenter: AlertPresenterProtocol?
-    private weak var viewController: ProfileViewControllerProtocol?
     private var profileImageServiceObserver: NSObjectProtocol?
 
-    init(viewController: ProfileViewControllerProtocol, alert: AlertPresenterProtocol) {
+    init(alert: AlertPresenterProtocol) {
         self.alertPresenter = alert
-        self.viewController = viewController
         self.tokenStorage = OAuth2TokenStorage()
     }
 
@@ -35,9 +37,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             primaryCompletion: { [weak self] in
                 guard let self = self else { return }
 
-                self.tokenStorage.token = nil
                 WebViewViewController.clean()
-                self.viewController?.didExitFromAccount()
+                self.tokenStorage?.token = nil
+                self.view?.didExitFromAccount()
             },
             secondButtonText: "Нет",
             secondCompletion:  { return })
@@ -48,7 +50,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     func presentProfile() {
         guard let profileModel = profileService.profile else { return }
         let viewModel = convertToViewModel(model: profileModel)
-        viewController?.showProfile(viewModel)
+        view?.showProfile(viewModel)
     }
 
     func addObserver() {
@@ -65,11 +67,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     private func updateAvatar() {
         if let profileImageURL = profileImageService.avatarURL,
            let url = URL(string: profileImageURL) {
-            viewController?.showAvatar(urlImage: url)
+            view?.showAvatar(urlImage: url)
         }
     }
 
-    private func convertToViewModel(model: ProfileModel) -> ProfileViewModel {
+    func convertToViewModel(model: ProfileModel) -> ProfileViewModel {
         return ProfileViewModel(username: model.username,
                                 fullName: "\(model.firstName) \(model.lastName)",
                                 loginName: "@\(model.username)",

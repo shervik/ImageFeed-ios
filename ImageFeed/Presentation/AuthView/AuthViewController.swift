@@ -25,7 +25,7 @@ final class AuthViewController: UIViewController {
     private lazy var imageView = UIImageView()
     private lazy var buttonEnter = UIButton(type: .custom)
 
-    private var webViewViewController = WebViewViewController()
+    private var webViewViewController: WebViewViewController?
     weak var delegate: AuthViewControllerDelegate?
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -34,17 +34,24 @@ final class AuthViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        webViewViewController = WebViewViewController()
+        let webViewPresenter = WebViewPresenter(authHelper: AuthHelper())
+        webViewViewController?.configure(webViewPresenter)
+        webViewViewController?.delegate = self
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         view.backgroundColor = .ypBlack
-
-        webViewViewController.delegate = self
-
         configImage()
         configButton()
         configConstraint()
     }
 
     @objc private func didTapEnterButton() {
-        navigationController?.pushViewController(webViewViewController, animated: true)
+        if let vc = webViewViewController {
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
 
@@ -78,6 +85,7 @@ extension AuthViewController {
         buttonEnter.layer.masksToBounds = true
         buttonEnter.layer.cornerRadius = Constants.buttonCornerRadius
         buttonEnter.addTarget(self, action: #selector(didTapEnterButton), for: .touchUpInside)
+        buttonEnter.accessibilityIdentifier = "Authenticate"
     }
 
     private func configConstraint() {

@@ -17,37 +17,44 @@ protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewControllerDidCancel()
 }
 
-final class WebViewViewController: UIViewController {
+protocol WebViewViewControllerProtocol: AnyObject {
+    func load(_ request: URLRequest)
+    func setProgressValue(_ newValue: Float)
+    func setProgressHidden(_ isHidden: Bool)
+    func configure(_ presenter: WebViewPresenterProtocol)
+}
+
+final class WebViewViewController: UIViewController, WebViewViewControllerProtocol {
     private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
 
-    private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
+    private var presenter: WebViewPresenterProtocol?
+    private var estimatedProgressObservation: NSKeyValueObservation?
 
     private lazy var webView = WKWebView()
     private lazy var buttonBack = UIButton(type: .custom)
-    private lazy var progressView = UIProgressView(progressViewStyle: .default)
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        estimatedProgressObservation = webView.observe(
-            \.estimatedProgress,
-             options: [.new]) { [weak self] _, _ in
-                 self?.updateProgress()
-             }
-    }
+    private lazy var progressView = UIProgressView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
-
         webView.navigationDelegate = self
-        loadWebRequest()
+        presenter?.viewDidLoad()
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.backgroundColor = .ypWhite
         configWebView()
         configButton()
         configProgress()
         configConstraint()
+
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [.new]) { [weak self] _, _ in
+                 guard let self = self else { return }
+                 self.presenter?.didUpdateProgressValue(self.webView.estimatedProgress)
+             }
     }
 
     static func clean() {
@@ -60,25 +67,21 @@ final class WebViewViewController: UIViewController {
         }
     }
 
-    private func loadWebRequest() {
-        var urlComponents = URLComponents(string: unsplashAuthorizeURLString)
-        urlComponents?.queryItems = [
-            URLQueryItem(name: "client_id", value: accessKey),
-            URLQueryItem(name: "redirect_uri", value: redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: accessScope)
-        ]
-        guard let url = urlComponents?.url else { return }
-
-        DispatchQueue.main.async {
-            let request = URLRequest(url: url)
-            self.webView.load(request)
-        }
+    func configure(_ presenter: WebViewPresenterProtocol) {
+        self.presenter = presenter
+        presenter.view = self
     }
 
-    private func updateProgress() {
-        progressView.progress = Float(webView.estimatedProgress)
-        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    func load(_ request: URLRequest) {
+        webView.load(request)
+    }
+
+    func setProgressValue(_ newValue: Float) {
+        progressView.progress = newValue
+    }
+
+    func setProgressHidden(_ isHidden: Bool) {
+        progressView.isHidden = isHidden
     }
 
     @objc private func didTapBackButton() {
@@ -102,17 +105,10 @@ extension WebViewViewController: WKNavigationDelegate {
     }
 
     private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
+        if let url = navigationAction.request.url {
+            return presenter?.code(from: url)
         }
+        return nil
     }
 }
 
@@ -121,6 +117,7 @@ extension WebViewViewController {
     private func configWebView() {
         view.addSubview(webView)
         webView.backgroundColor = .ypWhite
+        webView.accessibilityIdentifier = "UnsplashWebView"
     }
 
     private func configButton() {
@@ -135,7 +132,6 @@ extension WebViewViewController {
         view.addSubview(progressView)
 
         progressView.tintColor = .ypBlack
-//        progressView.progressTintColor = .ypBlack
         progressView.trackTintColor = .ypBackground
     }
 
@@ -154,7 +150,7 @@ extension WebViewViewController {
 
             progressView.topAnchor.constraint(equalTo: buttonBack.bottomAnchor),
             progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 }

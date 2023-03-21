@@ -14,7 +14,7 @@ enum NetworkError: Error {
 }
 
 extension NetworkError: LocalizedError {
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .httpStatusCode(_), .urlRequestError(_), .urlSessionError:
             return "Что-то пошло не так("
@@ -41,7 +41,7 @@ final class NetworkService: NetworkRouting {
     let urlSession = URLSession.shared
 
     func makeHTTPRequest(
-        baseURL: URL = defaultBaseURL,
+        baseURL: URL = AuthConfiguration.standard.defaultBaseURL,
         path: String,
         httpMethod: String,
         query: [URLQueryItem]?) -> URLRequest {
