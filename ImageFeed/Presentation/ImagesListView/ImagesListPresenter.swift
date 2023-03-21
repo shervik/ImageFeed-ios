@@ -8,7 +8,7 @@
 import Foundation
 import Kingfisher
 
-public protocol ImagesListPresenterProtocol: AnyObject {
+protocol ImagesListPresenterProtocol: AnyObject {
     var view: ImagesListViewControllerProtocol? { get set }
     var photo: PhotosViewModel? { get set }
     func getPhoto()
@@ -40,7 +40,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     }
 
     func getPhoto() {
-        guard let photoModel = imagesListHelper.returnPhotoModel() else { return }
+        guard let photoModel = imagesListHelper.photoModel else { return }
         photo = convertToViewModel(model: photoModel)
     }
 

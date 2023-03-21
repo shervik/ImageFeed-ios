@@ -8,20 +8,31 @@
 import Foundation
 
 protocol AuthHelperProtocol {
-    func authRequest() -> URLRequest?
+    var authRequest: URLRequest? { get }
     func code(from url: URL) -> String?
 }
 
 final class AuthHelper: AuthHelperProtocol {
-    let configuration: AuthConfiguration
+    private let configuration: AuthConfiguration
+
+    var authRequest: URLRequest? {
+        guard let url = urlComponents else { return nil }
+        return URLRequest(url: url)
+    }
+
+    private var urlComponents: URL? {
+        var urlComponents = URLComponents(string: configuration.authURLString)
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "client_id", value: configuration.accessKey),
+            URLQueryItem(name: "redirect_uri", value: configuration.redirectURI),
+            URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "scope", value: configuration.accessScope)
+        ]
+        return urlComponents?.url
+    }
 
     init(configuration: AuthConfiguration = .standard) {
         self.configuration = configuration
-    }
-
-    func authRequest() -> URLRequest? {
-        guard let url = authURL() else { return nil }
-        return URLRequest(url: url)
     }
 
     func code(from url: URL) -> String? {
@@ -35,16 +46,4 @@ final class AuthHelper: AuthHelperProtocol {
             return nil
         }
     }
-
-    func authURL() -> URL? {
-        var urlComponents = URLComponents(string: configuration.authURLString)
-        urlComponents?.queryItems = [
-            URLQueryItem(name: "client_id", value: configuration.accessKey),
-            URLQueryItem(name: "redirect_uri", value: configuration.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: configuration.accessScope)
-        ]
-        return urlComponents?.url
-    }
-
 }

@@ -14,7 +14,7 @@ enum NetworkError: Error {
 }
 
 extension NetworkError: LocalizedError {
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .httpStatusCode(_), .urlRequestError(_), .urlSessionError:
             return "Что-то пошло не так("

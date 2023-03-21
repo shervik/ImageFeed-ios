@@ -8,13 +8,17 @@
 import Foundation
 
 protocol ImagesListHelperProtocol {
+    var photoModel: PhotoModel? { get }
     func loadNextPage()
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
-    func returnPhotoModel() -> PhotoModel?
 }
 
 final class ImagesListHelper: ImagesListHelperProtocol {
     private var imagesService = ImagesListService.shared
+
+    var photoModel: PhotoModel? {
+        imagesService.photos
+    }
 
     func loadNextPage() {
         imagesService.fetchPhotosNextPage()
@@ -24,9 +28,5 @@ final class ImagesListHelper: ImagesListHelperProtocol {
         imagesService.changeLike(photoId: photoId, isLike: isLike) { _ in
             completion(.success(()))
         }
-    }
-
-    func returnPhotoModel() -> PhotoModel? {
-        return imagesService.photos
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol WebViewPresenterProtocol: AnyObject {
+protocol WebViewPresenterProtocol: AnyObject {
     var view: WebViewViewControllerProtocol? { get set }
     func viewDidLoad()
     func didUpdateProgressValue(_ newValue: Double)
@@ -23,7 +23,7 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     }
 
     func viewDidLoad() {
-        if let request = authHelper.authRequest() { view?.load(request) }
+        if let request = authHelper.authRequest { view?.load(request) }
         didUpdateProgressValue(0)
     }
 

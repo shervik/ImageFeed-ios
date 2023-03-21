@@ -17,7 +17,7 @@ private enum Constants {
     static let avatarCornerRadius: CGFloat = 35
 }
 
-public protocol ProfileViewControllerProtocol: AnyObject {
+protocol ProfileViewControllerProtocol: AnyObject {
     func showProfile(_ model: ProfileViewModel?)
     func showAvatar(urlImage: URL)
     func didExitFromAccount()

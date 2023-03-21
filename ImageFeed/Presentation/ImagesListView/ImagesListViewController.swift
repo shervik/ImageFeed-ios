@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-public protocol ImagesListViewControllerProtocol: AnyObject {
+protocol ImagesListViewControllerProtocol: AnyObject {
     func configure(_ presenter: ImagesListPresenterProtocol)
 }
 
@@ -150,11 +150,11 @@ extension ImagesListViewController: ImagesListCellDelegate {
             case .success:
                 self.photos = self.presenter?.photo ?? []
                 cell.setIsLiked(self.photos[indexPath.row].isLiked)
-                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
                 self.presenter?.presentAlert(with: error)
-                UIBlockingProgressHUD.dismiss()
             }
+
+            UIBlockingProgressHUD.dismiss()
         }
     }
 }

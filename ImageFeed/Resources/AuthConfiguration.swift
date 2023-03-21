@@ -8,12 +8,12 @@
 import Foundation
 
 private enum Config {
-    static let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-    static let AccessKey = "JsHVnYHPOiTNPk_YfAg4taTjooG_VyEsdw_lW9mslMQ"
-    static let SecretKey = "ncDlrDOUmsinmdUfcW36K6tjzJvB9N8tp07D64H1V14"
-    static let RedirectURI = "urn:ietf:wg:oauth:2.0:oob"
-    static let AccessScope = "public+read_user+write_likes"
-    static let DefaultBaseURL: URL = URL(string: "https://api.unsplash.com/")!
+    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    static let accessKey = "JsHVnYHPOiTNPk_YfAg4taTjooG_VyEsdw_lW9mslMQ"
+    static let secretKey = "ncDlrDOUmsinmdUfcW36K6tjzJvB9N8tp07D64H1V14"
+    static let redirectURI = "urn:ietf:wg:oauth:2.0:oob"
+    static let accessScope = "public+read_user+write_likes"
+    static let defaultBaseURL: URL = URL(string: "https://api.unsplash.com/")!
 }
 
 struct AuthConfiguration {
@@ -25,12 +25,12 @@ struct AuthConfiguration {
     let authURLString: String
 
     static var standard: AuthConfiguration {
-        return AuthConfiguration(accessKey: Config.AccessKey,
-                                 secretKey: Config.SecretKey,
-                                 redirectURI: Config.RedirectURI,
-                                 accessScope: Config.AccessScope,
-                                 authURLString: Config.UnsplashAuthorizeURLString,
-                                 defaultBaseURL: Config.DefaultBaseURL)
+        return AuthConfiguration(accessKey: Config.accessKey,
+                                 secretKey: Config.secretKey,
+                                 redirectURI: Config.redirectURI,
+                                 accessScope: Config.accessScope,
+                                 authURLString: Config.unsplashAuthorizeURLString,
+                                 defaultBaseURL: Config.defaultBaseURL)
     }
 
     init(accessKey: String, secretKey: String, redirectURI: String, accessScope: String, authURLString: String, defaultBaseURL: URL) {

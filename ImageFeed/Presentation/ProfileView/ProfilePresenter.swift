@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol ProfilePresenterProtocol: AnyObject {
+protocol ProfilePresenterProtocol: AnyObject {
     var view: ProfileViewControllerProtocol? { get set }
     func presentProfile()
     func presentAlert()
